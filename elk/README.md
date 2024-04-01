@@ -1,3 +1,5 @@
+# ELK Installation Guide
+
 1. Make sure Docker is installed
 2. Open the Comand Prompt and navigate to the folder
 3. Run the command "docker-compose up setup"
