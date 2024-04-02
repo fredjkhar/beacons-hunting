@@ -24,6 +24,10 @@ PS C:\program files\winlogbeat>.\winlogbeat.exe setup -e
 
 PS C:\program files\winlogbeat> Start-Service winlogbeat
 
+![image](https://github.com/fredjkhar/SEG491X-T64-Capstone/assets/71086250/8d265e66-1a13-40b6-9d35-0d8b26fb6592)
+
+![image](https://github.com/fredjkhar/SEG491X-T64-Capstone/assets/71086250/927b4295-43f2-4288-9a27-5cecfece70db)
+
 
 ## Updating Winlogbeat IP Configuration
 When restarting the computer with the docker container running ELK, the IPv4 address of the Default Switch will change
@@ -34,6 +38,9 @@ To find the IPv4 adress of the default switch
 3. Locate Default Switch
 4. Replace the ip in the winlogbeat file with the new one
 5. Run the following as an administrator in Power Shell
+
+![image](https://github.com/fredjkhar/SEG491X-T64-Capstone/assets/71086250/5c2dccce-11a4-4ec2-bb54-60a27c580b38)
+
    
 PS C:\Windows\system32> cd ..
 
