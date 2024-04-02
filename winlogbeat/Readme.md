@@ -6,6 +6,8 @@
 4. Replace the winlogbeat.yml file with the one provided
 5. Change any instance of local host in the winlogbeat.yml config file with the IPv4 address of the host computers Default Switch
 
+![image](https://github.com/fredjkhar/SEG491X-T64-Capstone/assets/71086250/174025c2-26cf-4edb-8300-88fcb9706475)
+
 
 ## Open power shell as administator and run the following
 
