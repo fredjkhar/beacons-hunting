@@ -360,6 +360,28 @@
 			<DestinationPort name="Tor" condition="is">1723</DestinationPort> <!--Tor protocol [ https://attack.mitre.org/wiki/Technique/T1090 ] | Credit @ion-storm-->
 			<DestinationPort name="Tor" condition="is">9001</DestinationPort> <!--Tor protocol [ http://www.computerworlduk.com/tutorial/security/tor-enterprise-2016-blocking-malware-darknet-use-rogue-nodes-3633907/ ] -->
 			<DestinationPort name="Tor" condition="is">9030</DestinationPort> <!--Tor protocol [ http://www.computerworlduk.com/tutorial/security/tor-enterprise-2016-blocking-malware-darknet-use-rogue-nodes-3633907/ ] -->
+			<DestinationIp condition="is not">127.0.0.1</DestinationIp> <!-- Exclude localhost -->
+            <DestinationIp condition="is not">::1</DestinationIp> <!-- Exclude localhost IPv6 -->
+            <!-- Exclude well-known internal IP ranges to focus on external communications -->
+            <DestinationIp condition="not begin with">10.</DestinationIp>
+            <DestinationIp condition="not begin with">192.168.</DestinationIp>
+            <DestinationIp condition="not begin with">172.16.</DestinationIp>
+            <DestinationIp condition="not begin with">172.17.</DestinationIp>
+            <DestinationIp condition="not begin with">172.18.</DestinationIp>
+            <DestinationIp condition="not begin with">172.19.</DestinationIp>
+            <DestinationIp condition="not begin with">172.20.</DestinationIp>
+            <DestinationIp condition="not begin with">172.21.</DestinationIp>
+            <DestinationIp condition="not begin with">172.22.</DestinationIp>
+            <DestinationIp condition="not begin with">172.23.</DestinationIp>
+            <DestinationIp condition="not begin with">172.24.</DestinationIp>
+            <DestinationIp condition="not begin with">172.25.</DestinationIp>
+            <DestinationIp condition="not begin with">172.26.</DestinationIp>
+            <DestinationIp condition="not begin with">172.27.</DestinationIp>
+            <DestinationIp condition="not begin with">172.28.</DestinationIp>
+            <DestinationIp condition="not begin with">172.29.</DestinationIp>
+            <DestinationIp condition="not begin with">172.30.</DestinationIp>
+            <DestinationIp condition="not begin with">172.31.</DestinationIp>
+            <!-- Additional exclusions for known endpoints can be added here -->
 		</NetworkConnect>
 	</RuleGroup>
 
