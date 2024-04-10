@@ -32,7 +32,7 @@
     VirtualBox 7.0.14 : Windows host
 2. Install Microsoft Visual C++ Redistributable to run VB
    https://learn.microsoft.com/en-us/cpp/windows/latest-supported-vc-redist?view=msvc-170
-   https://aka.ms/vs/17/release/vc_redist.x64.exe
+   
     
 
 
