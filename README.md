@@ -33,7 +33,7 @@ Details on [the week 6 wiki page](https://github.com/fredjkhar/SEG491X-T64-Capst
 6. You should start seeing sysmon events being ingested by elastic
 ![alt text](./images/kibana-dashboard.png)
 
-## Step 4 : Install and run VirtualBox
+### Step 4 : Install and run VirtualBox
 1. Install VirtualBox 
     https://www.virtualbox.org/wiki/Downloads
     VirtualBox 7.0.14 : Windows host
