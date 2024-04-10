@@ -72,128 +72,161 @@
 
 	<EventFiltering>
 
-	<!--SYSMON EVENT ID 3 : NETWORK CONNECTION INITIATED [NetworkConnect]-->
-		<!--COMMENT:	By default this configuration takes a very conservative approach to network logging, limited to only extremely high-signal events.-->
-		<!--COMMENT:	[ https://attack.mitre.org/wiki/Command_and_Control ] [ https://attack.mitre.org/wiki/Exfiltration ] [ https://attack.mitre.org/wiki/Lateral_Movement ] -->
-		<!--TECHNICAL:	For the DestinationHostname, Sysmon uses the GetNameInfo API, which will often not have any information, and may just be a CDN. This is NOT reliable for filtering.-->
-		<!--TECHNICAL:	For the DestinationPortName, Sysmon uses the GetNameInfo API for the friendly name of ports you see in logs.-->
-		<!--TECHNICAL:	These exe do not initiate their connections, and thus includes do not work in this section: BITSADMIN NLTEST-->
-
-		<!-- https://www.first.org/resources/papers/conf2017/APT-Log-Analysis-Tracking-Attack-Tools-by-Audit-Policy-and-Sysmon.pdf -->
-
-		<!--DATA: UtcTime, ProcessGuid, ProcessId, Image, User, Protocol, Initiated, SourceIsIpv6, SourceIp, SourceHostname, SourcePort, SourcePortName, DestinationIsIpV6, DestinationIp, DestinationHostname, DestinationPort, DestinationPortName-->
-	<RuleGroup name="" groupRelation="or">
-		<NetworkConnect onmatch="include">
-			<!--Suspicious sources for network-connecting binaries-->
-			<Image name="Usermode" condition="begin with">C:\Users</Image> <!--Tools downloaded by users can use other processes for networking, but this is a very valuable indicator.-->
-			<Image name="Caution" condition="begin with">C:\Recycle</Image> <!--Nothing should operate from the RecycleBin locations.-->
-			<Image condition="begin with">C:\ProgramData</Image> <!--Normally, network communications should be sourced from "Program Files" not from ProgramData, something to look at-->
-			<Image condition="begin with">C:\Windows\Temp</Image> <!--Suspicious anything would communicate from the system-level temp directory-->
-			<Image name="Caution" condition="begin with">\</Image> <!--Devices and VSC shouldn't be executing changes | Credit: @SBousseaden @ionstorm @neu5ron @PerchedSystems [ https://twitter.com/SwiftOnSecurity/status/1133167323991486464 ] -->
-			<Image name="Caution" condition="begin with">C:\perflogs</Image> <!-- Credit @blu3_team [ https://blu3-team.blogspot.com/2019/05/netconn-from-suspicious-directories.html ] -->
-			<Image name="Caution" condition="begin with">C:\intel</Image> <!-- Credit @blu3_team [ https://blu3-team.blogspot.com/2019/05/netconn-from-suspicious-directories.html ] -->
-			<Image name="Caution" condition="begin with">C:\Windows\fonts</Image> <!-- Credit @blu3_team [ https://blu3-team.blogspot.com/2019/05/netconn-from-suspicious-directories.html ] -->
-			<Image name="Caution" condition="begin with">C:\Windows\system32\config</Image> <!-- Credit @blu3_team [ https://blu3-team.blogspot.com/2019/05/netconn-from-suspicious-directories.html ] -->
-			<!--Suspicious Windows tools-->
-			<Image condition="image">at.exe</Image> <!--Windows: Remote task scheduling, removed in Win10 | Credit @ion-storm -->
-			<Image condition="image">certutil.exe</Image> <!--Windows: Certificate tool can contact outbound | Credit @ion-storm @FVT [ https://twitter.com/FVT/status/834433734602530817 ] -->
-			<Image condition="image">cmd.exe</Image> <!--Windows: Remote command prompt-->
-			<Image condition="image">cmstp.exe</Image> <!--Windows: Connection manager profiles can launch executables from WebDAV [ https://twitter.com/NickTyrer/status/958450014111633408 ] | Credit @NickTyrer @Oddvarmoe @KyleHanslovan @subTee -->
-			<Image condition="image">cscript.exe</Image> <!--WindowsScriptingHost: | Credit @Cyb3rOps [ https://gist.github.com/Neo23x0/a4b4af9481e01e749409 ] -->
-			<Image condition="image">driverquery.exe</Image> <!--Windows: Remote recognisance of system configuration, oudated/vulnerable drivers -->
-			<Image condition="image">dsquery.exe</Image> <!--Microsoft: Query Active Directory -->
-			<Image condition="image">hh.exe</Image> <!--Windows: HTML Help Executable, opens CHM files -->
-			<Image condition="image">infDefaultInstall.exe</Image> <!--Microsoft: [ https://github.com/huntresslabs/evading-autoruns ] | Credit @KyleHanslovan -->
-			<Image condition="image">java.exe</Image> <!--Java: Monitor usage of vulnerable application and init from JAR files | Credit @ion-storm -->
-			<Image condition="image">javaw.exe</Image> <!--Java: Monitor usage of vulnerable application and init from JAR files -->
-			<Image condition="image">javaws.exe</Image> <!--Java: Monitor usage of vulnerable application and init from JAR files -->
-			<Image condition="image">mmc.exe</Image> <!--Windows: -->
-			<Image condition="image">msbuild.exe</Image> <!--Windows: [ https://www.hybrid-analysis.com/sample/a314f6106633fba4b70f9d6ddbee452e8f8f44a72117749c21243dc93c7ed3ac?environmentId=100 ] -->
-			<Image condition="image">mshta.exe</Image> <!--Windows: HTML application executes scripts without IE protections | Credit @ion-storm [ https://en.wikipedia.org/wiki/HTML_Application ] -->
-			<Image condition="image">msiexec.exe</Image> <!--Windows: Can install from http:// paths | Credit @vector-sec -->
-			<Image condition="image">nbtstat.exe</Image> <!--Windows: NetBIOS statistics, attackers use to enumerate local network -->
-			<Image condition="image">net.exe</Image> <!--Windows: Note - May not detect anything, net.exe is a front-end to lower APIs | Credit @ion-storm -->
-			<Image condition="image">net1.exe</Image> <!--Windows: Launched by "net.exe", but it may not detect connections either -->
-			<Image condition="image">notepad.exe</Image> <!--Windows: [ https://secrary.com/ReversingMalware/CoinMiner/ ] [ https://blog.cobaltstrike.com/2013/08/08/why-is-notepad-exe-connecting-to-the-internet/ ] -->
-			<Image condition="image">nslookup.exe</Image> <!--Windows: Retrieve data over DNS -->
-			<Image condition="image">powershell.exe</Image> <!--Windows: PowerShell interface-->
-			<Image condition="image">powershell_ise.exe</Image> <!--Windows: PowerShell interface-->
-			<Image condition="image">qprocess.exe</Image> <!--Windows: [ https://www.first.org/resources/papers/conf2017/APT-Log-Analysis-Tracking-Attack-Tools-by-Audit-Policy-and-Sysmon.pdf ] -->
-			<Image condition="image">qwinsta.exe</Image> <!--Windows: Query remote sessions | Credit @ion-storm -->
-			<Image condition="image">qwinsta.exe</Image> <!--Windows: Remotely query login sessions on a server or workstation | Credit @ion-storm -->
-			<Image condition="image">reg.exe</Image> <!--Windows: Remote Registry editing ability | Credit @ion-storm -->
-			<Image condition="image">regsvcs.exe</Image> <!--Windows: [ https://www.hybrid-analysis.com/sample/3f94d7080e6c5b8f59eeecc3d44f7e817b31562caeba21d02ad705a0bfc63d67?environmentId=100 ] -->
-			<Image condition="image">regsvr32.exe</Image> <!--Windows: [ https://subt0x10.blogspot.com/2016/04/bypass-application-whitelisting-script.html ] -->
-			<Image condition="image">rundll32.exe</Image> <!--Windows: [ https://blog.cobaltstrike.com/2016/07/22/why-is-rundll32-exe-connecting-to-the-internet/ ] -->
-			<Image condition="image">rwinsta.exe</Image> <!--Windows: Disconnect remote sessions | Credit @ion-storm -->
-			<Image condition="image">sc.exe</Image> <!--Windows: Remotely change Windows service settings | Credit @ion-storm -->
-			<Image condition="image">schtasks.exe</Image> <!--Windows: Command-line interface to local and remote tasks -->
-			<Image condition="image">taskkill.exe</Image> <!--Windows: Kill processes, has remote ability -->
-			<Image condition="image">tasklist.exe</Image> <!--Windows: List processes, has remote ability -->
-			<Image condition="image">wmic.exe</Image> <!--WindowsManagementInstrumentation: Credit @Cyb3rOps [ https://gist.github.com/Neo23x0/a4b4af9481e01e749409 ] -->
-			<Image condition="image">wscript.exe</Image> <!--WindowsScriptingHost: | Credit @arekfurt -->
-			<!--Live of the Land Binaries and scripts (LOLBAS) -->
-			<Image condition="image">bitsadmin.exe</Image> <!-- Windows: Background Intelligent Transfer Service - Can download from URLs -->
-			<Image condition="image">esentutl.exe</Image> <!-- Windows: Database utilities for the ESE - Can fetch from UNC paths -->
-			<Image condition="image">expand.exe</Image> <!-- Windows: Expands one or more compressed files - Can fetch from UNC paths -->
-			<Image condition="image">extrac32.exe</Image> <!--Windows: Uncompress .cab files - Can fetch from UNC paths -->
-			<Image condition="image">findstr.exe</Image> <!-- Windows: Search for strings - Can fetch from UNC paths -->
-			<Image condition="image">GfxDownloadWrapper.exe</Image> <!-- Intel Graphics Control Panel: Remote file download -->
-			<Image condition="image">ieexec.exe</Image> <!-- Windows: Microsoft .NET Framework application - Download and execute from URLs -->
-			<Image condition="image">makecab.exe</Image> <!-- Windows: Packages existing files into a .cab - Can fetch from UNC paths -->
-			<Image condition="image">replace.exe</Image> <!-- Windows: Used to replace file with another file - Can fetch from UNC paths -->
-			<Image condition="image">Excel.exe</Image> <!-- Windows Office: Excel - Can download from URLs -->
-			<Image condition="image">Powerpnt.exe</Image> <!-- Windows Office: PowerPoint - Can download from URLs -->
-			<Image condition="image">Winword.exe</Image> <!-- Windows Office: Word - Can download from URLs -->
-			<Image condition="image">squirrel.exe</Image> <!-- Windows: Update the Nuget/Squirrel packages. Part of Teams. - Can download from URLs -->
-			<!--Relevant 3rd Party Tools-->
-			<Image condition="image">nc.exe</Image> <!-- Nmap's modern version of netcat [ https://nmap.org/ncat/guide/index.html#ncat-overview ] [ https://securityblog.gr/1517/create-backdoor-in-windows-with-ncat/ ] -->
-			<Image condition="image">ncat.exe</Image> <!-- Nmap's modern version of netcat [ https://nmap.org/ncat/guide/index.html#ncat-overview ] [ https://securityblog.gr/1517/create-backdoor-in-windows-with-ncat/ ] -->
-			<Image condition="image">psexec.exe</Image> <!--Sysinternals:PsExec client side | Credit @Cyb3rOps -->
-			<Image condition="image">psexesvc.exe</Image> <!--Sysinternals:PsExec server side | Credit @Cyb3rOps -->
-			<Image condition="image">tor.exe</Image> <!--Tor [ https://www.hybrid-analysis.com/sample/800bf028a23440134fc834efc5c1e02cc70f05b2e800bbc285d7c92a4b126b1c?environmentId=100 ] -->
-			<Image condition="image">vnc.exe</Image> <!-- VNC client | Credit @Cyb3rOps -->
-			<Image condition="image">vncservice.exe</Image> <!-- VNC server | Credit @Cyb3rOps -->
-			<Image condition="image">vncviewer.exe</Image> <!-- VNC client | Credit @Cyb3rOps -->
-			<Image condition="image">winexesvc.exe</Image> <!-- Winexe service executable | Credit @Cyb3rOps -->
-			<Image condition="image">nmap.exe</Image>
-			<Image condition="image">psinfo.exe</Image>
-			<!--Ports: Suspicious-->
-			<DestinationPort name="SSH" condition="is">22</DestinationPort> <!--SSH protocol, monitor admin connections-->
-			<DestinationPort name="Telnet" condition="is">23</DestinationPort> <!--Telnet protocol, monitor admin connections, insecure-->
-			<DestinationPort name="SMTP" condition="is">25</DestinationPort> <!--SMTP mail protocol port, insecure, used by threats-->
-			<DestinationPort name="IMAP" condition="is">143</DestinationPort> <!--IMAP mail protocol port, insecure, used by threats-->
-			<DestinationPort name="RDP" condition="is">3389</DestinationPort> <!--Windows:RDP: Monitor admin connections-->
-			<DestinationPort name="VNC" condition="is">5800</DestinationPort> <!--VNC protocol: Monitor admin connections, often insecure, using hard-coded admin password-->
-			<DestinationPort name="VNC" condition="is">5900</DestinationPort> <!--VNC protocol Monitor admin connections, often insecure, using hard-coded admin password-->
-			<DestinationPort name="Alert,Metasploit" condition="is">4444</DestinationPort>
-			<!--Ports: Proxy-->
-			<DestinationPort name="Proxy" condition="is">1080</DestinationPort> <!--Socks proxy port | Credit @ion-storm-->
-			<DestinationPort name="Proxy" condition="is">3128</DestinationPort> <!--Socks proxy port | Credit @ion-storm-->
-			<DestinationPort name="Proxy" condition="is">8080</DestinationPort> <!--Socks proxy port | Credit @ion-storm-->
-			<!--Ports: Tor-->
-			<DestinationPort name="Tor" condition="is">1723</DestinationPort> <!--Tor protocol [ https://attack.mitre.org/wiki/Technique/T1090 ] | Credit @ion-storm-->
-			<DestinationPort name="Tor" condition="is">9001</DestinationPort> <!--Tor protocol [ http://www.computerworlduk.com/tutorial/security/tor-enterprise-2016-blocking-malware-darknet-use-rogue-nodes-3633907/ ] -->
-			<DestinationPort name="Tor" condition="is">9030</DestinationPort> <!--Tor protocol [ http://www.computerworlduk.com/tutorial/security/tor-enterprise-2016-blocking-malware-darknet-use-rogue-nodes-3633907/ ] -->
-		</NetworkConnect>
+	<!-- SYSMON EVENT ID 3 : NETWORK CONNECTION INITIATED [NetworkConnect] -->
+<!-- COMMENT:	By default this configuration takes a very conservative approach to network logging, limited to only extremely high-signal events. -->
+<!-- COMMENT:	[ https://attack.mitre.org/wiki/Command_and_Control ] [ https://attack.mitre.org/wiki/Exfiltration ] [ https://attack.mitre.org/wiki/Lateral_Movement ]  -->
+<!-- TECHNICAL:	For the DestinationHostname, Sysmon uses the GetNameInfo API, which will often not have any information, and may just be a CDN. This is NOT reliable for filtering. -->
+<!-- TECHNICAL:	For the DestinationPortName, Sysmon uses the GetNameInfo API for the friendly name of ports you see in logs. -->
+<!-- TECHNICAL:	These exe do not initiate their connections, and thus includes do not work in this section: BITSADMIN NLTEST -->
+<!--  https://www.first.org/resources/papers/conf2017/APT-Log-Analysis-Tracking-Attack-Tools-by-Audit-Policy-and-Sysmon.pdf  -->
+<!-- DATA: UtcTime, ProcessGuid, ProcessId, Image, User, Protocol, Initiated, SourceIsIpv6, SourceIp, SourceHostname, SourcePort, SourcePortName, DestinationIsIpV6, DestinationIp, DestinationHostname, DestinationPort, DestinationPortName -->
+<RuleGroup name="" groupRelation="or">
+	<NetworkConnect onmatch="include">
+	<!-- Suspicious sources for network-connecting binaries -->
+	<Image condition="begin with">C:\Users</Image>
+	<!-- Tools downloaded by users can use other processes for networking, but this is a very valuable indicator. -->
+	<Image condition="begin with">C:\ProgramData</Image>
+	<!-- Normally, network communications should be sourced from "Program Files" not from ProgramData, something to look at -->
+	<Image condition="begin with">C:\Windows\Temp</Image>
+	<!-- Suspicious anything would communicate from the system-level temp directory -->
+	<!-- Suspicious Windows tools -->
+	<Image condition="image">at.exe</Image>
+	<!-- Microsoft:Windows: Remote task scheduling | Credit @ion-storm  -->
+	<Image condition="image">certutil.exe</Image>
+	<!-- Microsoft:Windows: Certificate tool can contact outbound | Credit @ion-storm and @FVT [ https://twitter.com/FVT/status/834433734602530817 ]  -->
+	<Image condition="image">cmd.exe</Image>
+	<!-- Microsoft:Windows: Command prompt -->
+	<Image condition="image">cscript.exe</Image>
+	<!-- Microsoft:WindowsScriptingHost: | Credit @Cyb3rOps [ https://gist.github.com/Neo23x0/a4b4af9481e01e749409 ]  -->
+	<Image condition="image">java.exe</Image>
+	<!-- Java: Monitor usage of vulnerable application | Credit @ion-storm  -->
+	<Image condition="image">mshta.exe</Image>
+	<!-- Microsoft:Windows: HTML application executes scripts without IE protections | Credit @ion-storm [ https://en.wikipedia.org/wiki/HTML_Application ]  -->
+	<Image condition="image">msiexec.exe</Image>
+	<!-- Microsoft:Windows: Can install from http:// paths | Credit @vector-sec  -->
+	<Image condition="image">net.exe</Image>
+	<!-- Microsoft:Windows: "net use"/"net view" used by attackers to surveil and connect with file shares from command line | Credit @ion-storm  -->
+	<Image condition="image">notepad.exe</Image>
+	<!-- Microsoft:Windows: [ https://blog.cobaltstrike.com/2013/08/08/why-is-notepad-exe-connecting-to-the-internet/ ]  -->
+	<Image condition="image">powershell.exe</Image>
+	<!-- Microsoft:Windows: PowerShell interface -->
+	<Image condition="image">qwinsta.exe</Image>
+	<!-- Microsoft:Windows: Remotely query login sessions on a server or workstation | Credit @ion-storm  -->
+	<Image condition="image">reg.exe</Image>
+	<!-- Microsoft:Windows: Remote Registry | Credit @ion-storm  -->
+	<Image condition="image">regsvr32.exe</Image>
+	<!-- Microsoft:Windows: [ https://subt0x10.blogspot.com/2016/04/bypass-application-whitelisting-script.html ]  -->
+	<Image condition="image">rundll32.exe</Image>
+	<!-- Microsoft:Windows: [ https://blog.cobaltstrike.com/2016/07/22/why-is-rundll32-exe-connecting-to-the-internet/ ]  -->
+	<Image condition="image">sc.exe</Image>
+	<!-- Microsoft:Windows: Remotely change Windows service settings from command line | Credit @ion-storm  -->
+	<Image condition="image">wmic.exe</Image>
+	<!-- Microsoft:WindowsManagementInstrumentation: Credit @Cyb3rOps [ https://gist.github.com/Neo23x0/a4b4af9481e01e749409 ]  -->
+	<Image condition="image">wscript.exe</Image>
+	<!-- Microsoft:WindowsScriptingHost: | Credit @arekfurt  -->
+	<!-- Relevant 3rd Party Tools: Remote Access -->
+	<Image condition="image">psexec.exe</Image>
+	<!-- Sysinternals:PsExec client side | Credit @Cyb3rOps  -->
+	<Image condition="image">psexesvc.exe</Image>
+	<!-- Sysinternals:PsExec server side | Credit @Cyb3rOps  -->
+	<Image condition="image">vnc.exe</Image>
+	<!--  VNC client | Credit @Cyb3rOps  -->
+	<Image condition="image">vncviewer.exe</Image>
+	<!--  VNC client | Credit @Cyb3rOps  -->
+	<Image condition="image">vncservice.exe</Image>
+	<!--  VNC server | Credit @Cyb3rOps  -->
+	<Image condition="image">winexesvc.exe</Image>
+	<!--  Winexe service executable | Credit @Cyb3rOps  -->
+	<Image condition="image">\AA_v</Image>
+	<!--  Ammy Admin service executable (e.g. AA_v3.0.exe AA_v3.5.exe ) | Credit @Cyb3rOps  -->
+	<!--  Often exploited services  -->
+	<Image condition="image">omniinet.exe</Image>
+	<!--  HP Data Protector https://www.cvedetails.com/vulnerability-list/vendor_id-10/product_id-20499/HP-Data-Protector.html | Credit @Cyb3rOps  -->
+	<Image condition="image">hpsmhd.exe</Image>
+	<!--  HP System Management Homepage https://www.cvedetails.com/vulnerability-list/vendor_id-10/product_id-7244/HP-System-Management-Homepage.html | Credit @Cyb3rOps  -->
+	<!-- Malware related -->
+	<Image condition="image">tor.exe</Image>
+	<!-- Tor [ https://www.hybrid-analysis.com/sample/800bf028a23440134fc834efc5c1e02cc70f05b2e800bbc285d7c92a4b126b1c?environmentId=100 ]  -->
+	<!-- Ports: Suspicious -->
+	<DestinationPort condition="is">22</DestinationPort>
+	<!-- SSH protocol -->
+	<DestinationPort condition="is">23</DestinationPort>
+	<!-- Telnet protocol -->
+	<DestinationPort condition="is">25</DestinationPort>
+	<!-- SMTP mail protocol -->
+	<DestinationPort condition="is">3389</DestinationPort>
+	<!-- Microsoft:Windows:RDP -->
+	<DestinationPort condition="is">5800</DestinationPort>
+	<!-- VNC protocol -->
+	<DestinationPort condition="is">5900</DestinationPort>
+	<!-- VNC protocol -->
+	<!-- Ports: Proxy -->
+	<DestinationPort condition="is">1080</DestinationPort>
+	<!-- Socks proxy port | Credit @ion-storm -->
+	<DestinationPort condition="is">3128</DestinationPort>
+	<!-- Socks proyx port | Credit @ion-storm -->
+	<DestinationPort condition="is">8080</DestinationPort>
+	<!-- Socks proxy port | Credit @ion-storm -->
+	<!-- Ports: Tor -->
+	<DestinationPort condition="is">1723</DestinationPort>
+	<!-- Tor protocol | Credit @ion-storm -->
+	<DestinationPort condition="is">4500</DestinationPort>
+	<!-- Tor protocol | Credit @ion-storm -->
+	<DestinationPort condition="is">9001</DestinationPort>
+	<!-- Tor protocol [ http://www.computerworlduk.com/tutorial/security/tor-enterprise-2016-blocking-malware-darknet-use-rogue-nodes-3633907/ ]  -->
+	<DestinationPort condition="is">9030</DestinationPort>
+	<!-- Tor protocol [ http://www.computerworlduk.com/tutorial/security/tor-enterprise-2016-blocking-malware-darknet-use-rogue-nodes-3633907/ ]  -->
+	<DestinationIp condition="is not">127.0.0.1</DestinationIp>
+	<!--  Exclude localhost  -->
+	<DestinationIp condition="is not">::1</DestinationIp>
+	<!--  Exclude localhost IPv6  -->
+	<!--  Exclude well-known internal IP ranges to focus on external communications  -->
+	<DestinationIp condition="not begin with">10.</DestinationIp>
+	<DestinationIp condition="not begin with">192.168.</DestinationIp>
+	<DestinationIp condition="not begin with">172.16.</DestinationIp>
+	<DestinationIp condition="not begin with">172.17.</DestinationIp>
+	<DestinationIp condition="not begin with">172.18.</DestinationIp>
+	<DestinationIp condition="not begin with">172.19.</DestinationIp>
+	<DestinationIp condition="not begin with">172.20.</DestinationIp>
+	<DestinationIp condition="not begin with">172.21.</DestinationIp>
+	<DestinationIp condition="not begin with">172.22.</DestinationIp>
+	<DestinationIp condition="not begin with">172.23.</DestinationIp>
+	<DestinationIp condition="not begin with">172.24.</DestinationIp>
+	<DestinationIp condition="not begin with">172.25.</DestinationIp>
+	<DestinationIp condition="not begin with">172.26.</DestinationIp>
+	<DestinationIp condition="not begin with">172.27.</DestinationIp>
+	<DestinationIp condition="not begin with">172.28.</DestinationIp>
+	<DestinationIp condition="not begin with">172.29.</DestinationIp>
+	<DestinationIp condition="not begin with">172.30.</DestinationIp>
+	<DestinationIp condition="not begin with">172.31.</DestinationIp>
+	<!--  Additional exclusions for known endpoints can be added here  -->
+	</NetworkConnect>
 	</RuleGroup>
-
 	<RuleGroup name="" groupRelation="or">
-		<NetworkConnect onmatch="exclude">
-			<!--SECTION: Microsoft-->
-			<Image condition="begin with">C:\ProgramData\Microsoft\Windows Defender\Platform\</Image>
-			<Image condition="end with">AppData\Local\Microsoft\Teams\current\Teams.exe</Image> <!--Microsoft: Teams-->
-			<DestinationHostname condition="end with">.microsoft.com</DestinationHostname> <!--Microsoft:Update delivery-->
-			<DestinationHostname condition="end with">microsoft.com.akadns.net</DestinationHostname> <!--Microsoft:Update delivery-->
-			<DestinationHostname condition="end with">microsoft.com.nsatc.net</DestinationHostname> <!--Microsoft:Update delivery-->
-			<!--OCSP known addresses-->
-			<DestinationIp condition="is">23.4.43.27</DestinationIp> <!--Digicert [ https://otx.alienvault.com/indicator/ip/23.4.43.27 ] -->
-			<DestinationIp condition="is">72.21.91.29</DestinationIp> <!--Digicert [ https://otx.alienvault.com/indicator/ip/72.21.91.29 ] -->
-			<!--Section: Loopback Addresses-->
-			<DestinationIp condition="is">127.0.0.1</DestinationIp> <!--Credit @ITProPaul-->
-			<DestinationIp condition="begin with">fe80:0:0:0</DestinationIp> <!--Credit @ITProPaul-->
-		</NetworkConnect>
+	<NetworkConnect onmatch="exclude">
+	<!-- SECTION: Microsoft -->
+	<Image condition="begin with">C:\ProgramData\Microsoft\Windows Defender\Platform\</Image>
+	<Image condition="end with">AppData\Local\Microsoft\Teams\current\Teams.exe</Image>
+	<!-- Microsoft: Teams -->
+	<DestinationHostname condition="end with">.microsoft.com</DestinationHostname>
+	<!-- Microsoft:Update delivery -->
+	<DestinationHostname condition="end with">microsoft.com.akadns.net</DestinationHostname>
+	<!-- Microsoft:Update delivery -->
+	<DestinationHostname condition="end with">microsoft.com.nsatc.net</DestinationHostname>
+	<!-- Microsoft:Update delivery -->
+	<!-- OCSP known addresses -->
+	<DestinationIp condition="is">23.4.43.27</DestinationIp>
+	<!-- Digicert [ https://otx.alienvault.com/indicator/ip/23.4.43.27 ]  -->
+	<DestinationIp condition="is">72.21.91.29</DestinationIp>
+	<!-- Digicert [ https://otx.alienvault.com/indicator/ip/72.21.91.29 ]  -->
+	<!-- Section: Loopback Addresses -->
+	<DestinationIp condition="is">127.0.0.1</DestinationIp>
+	<!-- Credit @ITProPaul -->
+	<DestinationIp condition="begin with">fe80:0:0:0</DestinationIp>
+	<!-- Credit @ITProPaul -->
+	</NetworkConnect>
 	</RuleGroup>
 
 	</EventFiltering>
 </Sysmon>
+	
