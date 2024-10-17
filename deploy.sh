@@ -1,8 +1,8 @@
 #!/bin/bash
 
 # deploy.sh
-# Automates building, pushing, and running ELK stack containers.
-
+# DO not EXECUTE UNLESS REQUIRED
+# Manually build, push and run ELK stack containers.
 # Exit immediately if a command exits with a non-zero status
 set -e
 
