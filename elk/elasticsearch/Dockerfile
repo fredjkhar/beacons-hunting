@@ -1,7 +1,4 @@
-ARG ELASTIC_VERSION
-
-# https://www.docker.elastic.co/
+# elasticsearch/Dockerfile
+ARG ELASTIC_VERSION=8.15.1
 FROM docker.elastic.co/elasticsearch/elasticsearch:${ELASTIC_VERSION}
-
-# Add your elasticsearch plugins setup here
-# Example: RUN elasticsearch-plugin install analysis-icu
+EXPOSE 9200 9300
