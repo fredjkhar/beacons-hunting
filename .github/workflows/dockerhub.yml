@@ -1,0 +1,100 @@
+name: Build Docker Images
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+env:
+  ELASTIC_VERSION: '8.15.1' 
+  DOCKER_REPO: 'threat-hunting-elk-stack'
+
+jobs:
+  build-and-push:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v2
+
+      - name: Log in to Docker Hub
+        if: github.event_name == 'push'
+        uses: docker/login-action@v2
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v2
+
+      - name: Build Elasticsearch image
+        uses: docker/build-push-action@v3
+        with:
+          context: ./elasticsearch
+          file: ./elasticsearch/Dockerfile
+          push: false
+          tags: ${{ secrets.DOCKERHUB_USERNAME }}/${{ env.DOCKER_REPO }}:elasticsearch-${{ env.ELASTIC_VERSION }}
+          build-args: |
+            ELASTIC_VERSION=${{ env.ELASTIC_VERSION }}
+
+      - name: Build Kibana image
+        uses: docker/build-push-action@v3
+        with:
+          context: ./kibana
+          file: ./kibana/Dockerfile
+          push: false
+          tags: ${{ secrets.DOCKERHUB_USERNAME }}/${{ env.DOCKER_REPO }}:kibana-${{ env.ELASTIC_VERSION }}
+          build-args: |
+            ELASTIC_VERSION=${{ env.ELASTIC_VERSION }}
+
+      - name: Build Setup image
+        uses: docker/build-push-action@v3
+        with:
+          context: ./setup
+          file: ./setup/Dockerfile
+          push: false
+          tags: ${{ secrets.DOCKERHUB_USERNAME }}/${{ env.DOCKER_REPO }}:setup-${{ env.ELASTIC_VERSION }}
+          build-args: |
+            ELASTIC_VERSION=${{ env.ELASTIC_VERSION }}
+
+      - name: Push Elasticsearch image (only on push to main)
+        if: github.event_name == 'push'
+        uses: docker/build-push-action@v3
+        with:
+          context: ./elasticsearch
+          file: ./elasticsearch/Dockerfile
+          push: true
+          tags: ${{ secrets.DOCKERHUB_USERNAME }}/${{ env.DOCKER_REPO }}:elasticsearch-${{ env.ELASTIC_VERSION }}
+          build-args: |
+            ELASTIC_VERSION=${{ env.ELASTIC_VERSION }}
+
+      - name: Push Kibana image (only on push to main)
+        if: github.event_name == 'push'
+        uses: docker/build-push-action@v3
+        with:
+          context: ./kibana
+          file: ./kibana/Dockerfile
+          push: true
+          tags: ${{ secrets.DOCKERHUB_USERNAME }}/${{ env.DOCKER_REPO }}:kibana-${{ env.ELASTIC_VERSION }}
+          build-args: |
+            ELASTIC_VERSION=${{ env.ELASTIC_VERSION }}
+
+      - name: Push Setup image (only on push to main)
+        if: github.event_name == 'push'
+        uses: docker/build-push-action@v3
+        with:
+          context: ./setup
+          file: ./setup/Dockerfile
+          push: true
+          tags: ${{ secrets.DOCKERHUB_USERNAME }}/${{ env.DOCKER_REPO }}:setup-${{ env.ELASTIC_VERSION }}
+          build-args: |
+            ELASTIC_VERSION=${{ env.ELASTIC_VERSION }}
