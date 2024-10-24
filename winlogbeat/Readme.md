@@ -1,3 +1,4 @@
+
 # Winlogbeat Installation Guide
 
 1. Download the zip file from https://www.elastic.co/downloads/beats/winlogbeat
