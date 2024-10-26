@@ -83,6 +83,16 @@ describe('parseCSV', () => {
             ["Doe", "25"]
         ]);
     });
+
+    test('parse know csv with \' | \' values', () => {
+        const csvString = 'name,age,array\nJohn,30,123 | 321 | 332\nDoe,25,543 | 345 | 453'
+        const result = parseCSV(csvString);
+        expect(result).toEqual([
+            ["name", "age", "array"],
+            ["John", "30", ["123", "321", "332"]],
+            ["Doe", "25", ["543", "345", "453"]]
+        ]);
+    })
 });
 
 describe('Row Clicked', () => {
@@ -397,3 +407,90 @@ describe('ResultTable.vue sorting direction indicator', () => {
         expect(span.text()).toBe('▼'); // Check for descending indicator
     });    
 });
+
+describe("whitelist", ()=> {
+    test("test submitWhitelist", async () => {
+        const wrapper = mount(ResultTable, {
+            data() {
+                return {
+                    whitelistText: 'testExample',
+                    whitelist: null,
+                };
+            },
+        });
+    
+        await wrapper.vm.$nextTick();
+        await wrapper.vm.submitWhitelist();
+        expect(wrapper.vm.whitelist).toEqual('testExample');
+    });
+
+    test('updates whitelist when Whitelist button is clicked', async () => {
+        // Mount the component
+        const wrapper = mount(ResultTable);
+
+        // Set the whitelistText field
+        const whitelistInput = wrapper.find('#whitelistText');
+        await whitelistInput.setValue('testExample');
+
+        // Trigger the button click
+        const button = wrapper.find('button');
+        await button.trigger('click');
+
+        // Verify that the whitelist is updated
+        expect(wrapper.vm.whitelist).toEqual('testExample');
+    });
+
+    test('returns true if whitelist is empty or null', async () => {
+        const wrapper = mount(ResultTable);
+
+        wrapper.vm.whitelist = ''; // Empty whitelist
+        expect(wrapper.vm.checkWhitelist(['some', 'data'])).toBe(true);
+
+        wrapper.vm.whitelist = null; // Null whitelist
+        expect(wrapper.vm.checkWhitelist(['other', 'data'])).toBe(true);
+    });
+
+    test('returns false if a row contains the whitelist text', async () => {
+        const wrapper = mount(ResultTable);
+
+        wrapper.vm.whitelist = 'test';
+        const row = ['some', 'test', 'data'];
+        expect(wrapper.vm.checkWhitelist(row)).toBe(false);
+    });
+
+    test('returns true if a row does not contain the whitelist text', async () => {
+        const wrapper = mount(ResultTable);
+
+        wrapper.vm.whitelist = 'notInRow';
+        const row = ['some', 'data', 'here'];
+        expect(wrapper.vm.checkWhitelist(row)).toBe(true);
+    });
+
+    test('works with nested arrays within the row', async () => {
+        const wrapper = mount(ResultTable);
+
+        wrapper.vm.whitelist = 'nested';
+        const row = ['some', ['nested', 'data'], 'here'];
+        expect(wrapper.vm.checkWhitelist(row)).toBe(false);
+
+        wrapper.vm.whitelist = 'missing';
+        expect(wrapper.vm.checkWhitelist(row)).toBe(true);
+    });
+
+    test('returns false if a string cell contains the whitelist text, even with other non-string/array cells', async () => {
+        const wrapper = mount(ResultTable);
+
+        wrapper.vm.whitelist = 'matchMe';
+
+        const row = [
+            456,                          // Number
+            { key: 'value' },              // Object
+            true,                          // Boolean
+            'matchMe',                     // String containing whitelist text
+            ['no match here']              // Array without whitelist text
+        ];
+
+        // Since 'matchMe' is present in one of the string cells, checkWhitelist should return false
+        expect(wrapper.vm.checkWhitelist(row)).toBe(false);
+    });
+})

@@ -1,6 +1,11 @@
 <template>
     <h1>Result Table</h1>
 
+    <div name="whitelist">
+        <input type="text" id="whitelistText" v-model="whitelistText">
+        <button @click="submitWhitelist()">Whitelist</button>
+    </div>
+
     <div v-if="rowSelected == false">
         <br /><br />
         <table v-if="tableData.length" class="result_table">
@@ -16,7 +21,7 @@
             </thead>
             <tbody>
                 <tr v-for="(row, rowIndex) in sortedTableData" :key="rowIndex" @click="rowClicked(row)">
-                    <td v-for="(cell, cellIndex) in row" :key="cellIndex">{{ cell }}</td>
+                    <td v-for="(cell, cellIndex) in row" :key="cellIndex" v-if="checkWhitelist(row)">{{ cell }}</td>
                 </tr>
             </tbody>
         </table>
@@ -35,6 +40,8 @@ export default {
     },
     data() {
         return {
+            whitelistText: '',
+            whitelist: null,
             tableData: [], // Stores the parsed CSV data
             rowSelected: false,
             selectedRow: null,
@@ -66,6 +73,42 @@ export default {
             const { sortColumn, sortAsc } = sortTable(index, this.sortColumn, this.sortAsc);
             this.sortColumn = sortColumn;
             this.sortAsc = sortAsc;
+        },
+        submitWhitelist(){
+            this.whitelist = this.whitelistText;
+            this.handleSort();
+        },
+        // checkWhitelist(row){
+        //     // If whitelist is empty or not set, display the row
+        //     if (!this.whitelist) return true;
+        //     console.log(this.whitelist + "|||||" + row)
+
+        //     if(row != null || row != ""){
+        //         if(row.includes(this.whitelist)){
+        //             return false;
+        //         }
+        //         else{
+        //             return true;
+        //         }
+        //     }
+        // }
+        checkWhitelist(row) {
+            // If whitelist is empty or not set, display the row
+            if (!this.whitelist) return true;
+
+            console.log(`${this.whitelist} ||||| ${JSON.stringify(row)}`);
+
+            // Check each cell in the row
+            return !row.some(cell => {
+                if (typeof cell === 'string') {
+                    // Check if the string contains the whitelist text
+                    return cell.includes(this.whitelist);
+                } else if (Array.isArray(cell)) {
+                    // Check if any item in the array contains the whitelist text
+                    return cell.some(item => item.includes(this.whitelist));
+                }
+                return false; // If cell is not a string or array, it doesn't contain the text
+            });
         }
     }
 };

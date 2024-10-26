@@ -15,7 +15,14 @@ export async function fetchCSVData(location) {
 export function parseCSV(csv) {
     if (!csv) return []; // Handle case where csv is empty or undefined
     const rows = csv.split('\n').map((row) => row.trim());
-    return rows.map((row) => row.split(',').map((cell) => cell.trim()));
+    
+    
+    return rows.map((row) => 
+        row.split(',').map((cell) => {
+            cell = cell.trim();
+            return cell.includes(' | ') ? cell.split(' | ').map(item => item.trim()) : cell;
+        })
+    );
 }
 
 export function getSortedTableData(tableData, sortColumn, sortAsc) {
