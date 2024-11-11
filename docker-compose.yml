@@ -50,9 +50,28 @@ services:
       - elk
     restart: unless-stopped
 
+  backend:
+    image: your_dockerhub_username/backend:latest
+    container_name: backend
+    depends_on:
+      - elasticsearch
+    environment:
+      - SECRET_KEY=${SECRET_KEY}
+      - DEBUG=${DEBUG}
+      - ALLOWED_HOSTS=${ALLOWED_HOSTS}
+      # Add any other environment variables your Django app requires
+    ports:
+      - 8000:8000
+    volumes:
+      - static_volume:/app/static
+    networks:
+      - elk
+    restart: unless-stopped
+
 networks:
   elk:
     driver: bridge
 
 volumes:
   elasticsearch_data:
+  static_volume:

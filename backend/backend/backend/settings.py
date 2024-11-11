@@ -29,6 +29,11 @@ ALLOWED_HOSTS = []
 
 
 # Application definition
+ELASTICSEARCH_DSL = {
+    'default': {
+        'hosts': 'elasticsearch:9200'
+    },
+}
 
 INSTALLED_APPS = [
     'django.contrib.admin',
