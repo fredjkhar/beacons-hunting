@@ -21,14 +21,14 @@ jobs:
       - name: Set up Node.js
         uses: actions/setup-node@v3
         with:
-          cache-dependency-path: ./front end/Ransomware Hunter/package-lock.json
+          cache-dependency-path: ./frontend/ransomware-hunter/package-lock.json
           node-version: ${{ matrix.node-version }}
           cache: 'npm'
         
       - name: Install dependencies
         run: npm install
-        working-directory: ./front end/Ransomware Hunter
+        working-directory: ./frontend/ransomware-hunter
 
       - name: Run Vitest tests
         run: npm run test
-        working-directory: ./front end/Ransomware Hunter
+        working-directory: ./frontend/ransomware-hunter

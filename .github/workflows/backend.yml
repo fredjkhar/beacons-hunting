@@ -9,7 +9,7 @@ on:
       - main
 
 env:
-  DOCKER_REPO: 'threat-hunting-elk-stack'
+  DOCKER_REPO: 'threat-hunting-backend'
 
 jobs:
   build-and-push:
