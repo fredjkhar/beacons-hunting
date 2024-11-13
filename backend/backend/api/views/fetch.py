@@ -3,7 +3,7 @@ from elasticsearch import Elasticsearch
 
 def fetch_data_from_elasticsearch():
     try:
-        es = Elasticsearch([{'host': '35.203.32.116', 'port': 9200, 'scheme': 'http'}])
+        es = Elasticsearch([{'host': '34.67.212.1', 'port': 9200, 'scheme': 'http'}])
 
         # Elasticsearch query to fetch EventID 3 documents
         query = {

@@ -1,9 +1,7 @@
-<template>
-  <ResultTable />
-  <!-- <RowExpandView /> -->
-</template>
+<!-- App.vue -->
 
-<script setup>
-  import ResultTable from './components/ResultTable.vue';
-  // import RowExpandView from './components/RowExpandView.vue';
-</script>
+<template>
+  <div id="app">
+    <router-view></router-view>
+  </div>
+</template>

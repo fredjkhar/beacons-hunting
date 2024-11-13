@@ -3,3 +3,4 @@ Django==5.1.2
 sqlparse==0.5.1
 pandas
 elasticsearch
+django-cors-headers

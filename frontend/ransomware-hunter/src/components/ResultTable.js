@@ -1,65 +1,49 @@
-export async function fetchCSVData(location) {
+// ResultTable.js
+
+export async function fetchBackendData(endpoint = "/api/get/") {
     try {
-        const response = await fetch(location); // Ensure the path is correct
-        if (!response.ok) {
-            throw new Error('Failed to load the CSV file');
-        }
-        const csv = await response.text();
-        return csv; // Return the CSV content as a string
+      const response = await fetch(endpoint);
+      if (!response.ok) {
+        throw new Error("Failed to fetch data from the backend");
+      }
+      const data = await response.json();
+      return data;
     } catch (error) {
-        console.error(error.message);
-        return ''; // Return an empty string on error
+      console.error(error.message);
+      return []; // Return an empty array on error
     }
-}
-
-export function parseCSV(csv) {
-    if (!csv) return []; // Handle case where csv is empty or undefined
-    const rows = csv.split('\n').map((row) => row.trim());
-    
-    
-    return rows.map((row) => 
-        row.split(',').map((cell) => {
-            cell = cell.trim();
-            return cell.includes(' | ') ? cell.split(' | ').map(item => item.trim()) : cell;
-        })
-    );
-}
-
-export function getSortedTableData(tableData, sortColumn, sortAsc) {
-    if (sortColumn === null) {
-        return tableData.slice(1); // Return all rows except the headers if no sort is applied
-    }
-    return tableData.slice(1).sort((a, b) => {
-        let cellA = a[sortColumn];
-        let cellB = b[sortColumn];
-
-        // Try to parse numbers first; if NaN, compare as strings
-        const numberA = parseFloat(cellA);
-        const numberB = parseFloat(cellB);
-
-        if (!isNaN(numberA) && !isNaN(numberB)) {
-            cellA = numberA;
-            cellB = numberB;
-        }
-
-        if (cellA < cellB) return sortAsc ? -1 : 1;
-        if (cellA > cellB) return sortAsc ? 1 : -1;
-        return 0;
+  }
+  
+  export function getSortedTableData(data, sortKey, sortAsc) {
+    if (!sortKey) return data;
+    return [...data].sort((a, b) => {
+      let valueA = a[sortKey];
+      let valueB = b[sortKey];
+  
+      const numberA = parseFloat(valueA);
+      const numberB = parseFloat(valueB);
+  
+      if (!isNaN(numberA) && !isNaN(numberB)) {
+        valueA = numberA;
+        valueB = numberB;
+      }
+  
+      if (valueA < valueB) return sortAsc ? -1 : 1;
+      if (valueA > valueB) return sortAsc ? 1 : -1;
+      return 0;
     });
-}
-
-export function sortTable(index, currentSortColumn, currentSortAsc) {
-    let sortColumn = index;
+  }
+  
+  export function toggleSort(key, currentSortKey, currentSortAsc) {
+    let sortKey = key;
     let sortAsc = currentSortAsc;
-
-    if (currentSortColumn === index) {
-        // If the same column is clicked, toggle the sort direction
-        sortAsc = !currentSortAsc;
+  
+    if (currentSortKey === key) {
+      sortAsc = !currentSortAsc; // Toggle sort direction
     } else {
-        // If a new column is clicked, sort it in ascending order by default
-        sortColumn = index;
-        sortAsc = true;
+      sortKey = key;
+      sortAsc = true; // Default to ascending
     }
-
-    return { sortColumn, sortAsc };
-}
+  
+    return { sortKey, sortAsc };
+  }
