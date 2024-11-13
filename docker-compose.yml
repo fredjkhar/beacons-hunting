@@ -4,7 +4,7 @@ services:
     image: fredjk/threat-hunting-elk-stack:setup-${ELASTIC_VERSION}
     init: true
     volumes:
-      - ./setup/entrypoint.sh:/entrypoint.sh:ro,delegated
+      - ./setup/entrypoint.sh:/entrypoint.sh:ro
       - ./setup/lib.sh:/lib.sh:ro
       - ./setup/roles:/roles:ro
     environment:
@@ -12,6 +12,8 @@ services:
       - KIBANA_SYSTEM_PASSWORD=${KIBANA_SYSTEM_PASSWORD}
     networks:
       - elk
+    env_file:
+      - .env
     depends_on:
       - elasticsearch
     profiles:
@@ -33,6 +35,8 @@ services:
       - ES_JAVA_OPTS=-Xms512m -Xmx512m
     networks:
       - elk
+    env_file:
+      - .env
     restart: unless-stopped
 
   kibana:
@@ -50,29 +54,28 @@ services:
       - elk
     restart: unless-stopped
 
-#  backend:
-#    image: fredjk/threat-hunting-backend:django-backend
-#    container_name: backend
-#    depends_on:
-#      - elasticsearch
-#    environment:
-#      - SECRET_KEY=${SECRET_KEY}
-#      - DEBUG=${DEBUG}
-#      - ALLOWED_HOSTS=${ALLOWED_HOSTS}
-#    ports:
-#      - 8000:8000
-#    volumes:
-#      - static_volume:/app/static
-#    networks:
-#      - elk
-#    restart: unless-stopped
+  backend:
+    image: fredjk/threat-hunting-backend:django-backend
+    container_name: backend
+    depends_on:
+      - elasticsearch
+    environment:
+      - SECRET_KEY=${SECRET_KEY}
+      - DEBUG=${DEBUG}
+      - ALLOWED_HOSTS=${ALLOWED_HOSTS}
+    ports:
+      - 8000:8000
+    volumes:
+      - static_volume:/app/static
+    networks:
+      - elk
+    env_file:
+      - .env
+    restart: unless-stopped
 
 networks:
   elk:
     driver: bridge
-
-env_file:
-  - .env
 
 volumes:
   elasticsearch_data:

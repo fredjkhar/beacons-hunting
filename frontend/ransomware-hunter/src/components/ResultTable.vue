@@ -1,139 +1,134 @@
+<!-- ResultTable.vue -->
+
 <template>
-    <h1>Result Table</h1>
+  <div class="container">
+    <header>
+      <h1>Beacon Scores</h1>
+    </header>
 
-    <div name="whitelist">
-        <input type="text" id="whitelistText" v-model="whitelistText">
-        <button @click="submitWhitelist()">Whitelist</button>
+    <div class="whitelist mb-2">
+      <input
+        type="text"
+        v-model="whitelistText"
+        placeholder="Enter whitelist text"
+      />
+      <button @click="submitWhitelist">Whitelist</button>
     </div>
 
-    <div v-if="rowSelected == false">
-        <br /><br />
-        <table v-if="tableData.length" class="result_table">
-            <thead>
-                <tr>
-                    <th v-for="(header, index) in tableData[0]" :key="index" @click="handleSort(index)">
-                        {{ header }}
-                        <span v-if="sortColumn === index">
-                            {{ sortAsc ? '▲' : '▼' }}
-                        </span>
-                    </th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr v-for="(row, rowIndex) in sortedTableData" :key="rowIndex" @click="rowClicked(row)">
-                    <td v-for="(cell, cellIndex) in row" :key="cellIndex" v-if="checkWhitelist(row)">{{ cell }}</td>
-                </tr>
-            </tbody>
-        </table>
+    <div>
+      <table v-if="data.length" class="result_table">
+        <thead>
+          <tr>
+            <th v-for="key in headers" :key="key" @click="handleSort(key)">
+              {{ key }}
+              <span v-if="sortKey === key">
+                {{ sortAsc ? "▲" : "▼" }}
+              </span>
+            </th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr
+            v-for="row in sortedData"
+            :key="row.id"
+            @click="rowClicked(row)"
+            v-if="checkWhitelist(row)"
+          >
+            <td v-for="key in headers" :key="key" :data-label="key">
+              {{ row[key] }}
+            </td>
+          </tr>
+        </tbody>
+      </table>
     </div>
-
-    <RowExpandView v-if="rowSelected" :row="selectedRow" @closeView="closeRowExpandView"/>
+  </div>
 </template>
 
 <script>
-import RowExpandView from './RowExpandView.vue';
-import { fetchCSVData, parseCSV, getSortedTableData, sortTable } from './ResultTable.js';
+import {
+  fetchBackendData,
+  getSortedTableData,
+  toggleSort,
+} from "./ResultTable.js";
 
 export default {
-    components: {
-        RowExpandView
-    },
-    data() {
+  data() {
+    return {
+      whitelistText: "",
+      whitelist: null,
+      data: [],
+      sortKey: null,
+      sortAsc: true,
+      isLoading: false,
+      error: null,
+    };
+  },
+  async mounted() {
+    this.isLoading = true;
+    try {
+      const backendData = await fetchBackendData(
+        "http://127.0.0.1:8000/api/get/"
+      );
+      this.data = backendData.map((item, index) => {
+        const { "ConnectionTimes": _, ...rest } = item; // Use exact field name
         return {
-            whitelistText: '',
-            whitelist: null,
-            tableData: [], // Stores the parsed CSV data
-            rowSelected: false,
-            selectedRow: null,
-            sortColumn: null, // Tracks the index of the column to sort by
-            sortAsc: true,    // Tracks sorting direction: true = ascending, false = descending
+          id: index + 1, // Start IDs from 1
+          ...rest,
         };
-    },
-    async mounted() {
-        const csvData = await fetchCSVData('./sheets/final_results.csv');
-        this.tableData = parseCSV(csvData);
-    },
-    // automaticaly updates the values of sorted table
-    computed: {
-        sortedTableData() {
-            return getSortedTableData(this.tableData, this.sortColumn, this.sortAsc); // Pass the data to the external function
-        }
-    },
-    methods: {
-        rowClicked(row) {
-            if (row != null) {
-                this.selectedRow = row;
-                this.rowSelected = true;
-            }
-        },
-        closeRowExpandView() {
-            this.rowSelected = false;
-        },
-        handleSort(index) {
-            const { sortColumn, sortAsc } = sortTable(index, this.sortColumn, this.sortAsc);
-            this.sortColumn = sortColumn;
-            this.sortAsc = sortAsc;
-        },
-        submitWhitelist(){
-            this.whitelist = this.whitelistText;
-            this.handleSort();
-        },
-        // checkWhitelist(row){
-        //     // If whitelist is empty or not set, display the row
-        //     if (!this.whitelist) return true;
-        //     console.log(this.whitelist + "|||||" + row)
+      });
 
-        //     if(row != null || row != ""){
-        //         if(row.includes(this.whitelist)){
-        //             return false;
-        //         }
-        //         else{
-        //             return true;
-        //         }
-        //     }
-        // }
-        checkWhitelist(row) {
-            // If whitelist is empty or not set, display the row
-            if (!this.whitelist) return true;
-
-            console.log(`${this.whitelist} ||||| ${JSON.stringify(row)}`);
-
-            // Check each cell in the row
-            return !row.some(cell => {
-                if (typeof cell === 'string') {
-                    // Check if the string contains the whitelist text
-                    return cell.includes(this.whitelist);
-                } else if (Array.isArray(cell)) {
-                    // Check if any item in the array contains the whitelist text
-                    return cell.some(item => item.includes(this.whitelist));
-                }
-                return false; // If cell is not a string or array, it doesn't contain the text
-            });
-        }
+      // Store the data in localStorage
+      localStorage.setItem("tableData", JSON.stringify(this.data));
+    } catch (error) {
+      console.error("Error during fetch:", error);
+      this.error = "Failed to load data.";
+    } finally {
+      this.isLoading = false;
     }
+  },
+  computed: {
+    headers() {
+      // Exclude 'id' from headers
+      return this.data.length
+        ? Object.keys(this.data[0]).filter((key) => key !== "id")
+        : [];
+    },
+    sortedData() {
+      return getSortedTableData(this.data, this.sortKey, this.sortAsc);
+    },
+  },
+  methods: {
+    rowClicked(row) {
+      if (row && row.id !== undefined) {
+        this.$router.push({ name: "Details", params: { id: row.id } });
+      } else {
+        console.error("Row ID not found");
+      }
+    },
+    handleSort(key) {
+      const { sortKey, sortAsc } = toggleSort(
+        key,
+        this.sortKey,
+        this.sortAsc
+      );
+      this.sortKey = sortKey;
+      this.sortAsc = sortAsc;
+    },
+    submitWhitelist() {
+      this.whitelist = this.whitelistText;
+    },
+    checkWhitelist(row) {
+      if (!this.whitelist) return true;
+      return !Object.values(row).some((value) => {
+        if (typeof value === "string") {
+          return value.includes(this.whitelist);
+        }
+        if (Array.isArray(value)) {
+          return value.some((item) => item.includes(this.whitelist));
+        }
+        return false;
+      });
+    },
+  },
 };
 </script>
-
-<style scoped>
-.result_table {
-    border-collapse: collapse;
-    width: 98vw; /* Full viewport width */
-    table-layout: fixed; /* Ensures equal column width */
-}
-
-.result_table tr, td {
-    text-align: left;
-    padding: 8px;
-    overflow: hidden; /* Hide overflow */
-    white-space: nowrap; /* Prevent wrapping */
-}
-
-.result_table tr:nth-child(even) {
-    background-color: #f2f2f2;
-}
-
-.result_table th {
-    background-color: #0f2a54;
-    color: white;
-}
-</style>

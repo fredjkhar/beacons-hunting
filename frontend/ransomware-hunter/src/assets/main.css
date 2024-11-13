@@ -1,36 +1,81 @@
-/* default css */
-/* @import './base.css';
+/* main.css */
 
+/* Import base styles */
+@import './base.css';
+
+/* Main app container */
 #app {
-  max-width: 1280px;
+  max-width: 1200px;
   margin: 0 auto;
-  padding: 2rem;
-  font-weight: normal;
+  padding: 20px;
 }
 
-a,
-.green {
-  text-decoration: none;
-  color: hsla(160, 100%, 37%, 1);
-  transition: 0.4s;
-  padding: 3px;
+/* Header */
+header {
+  background-color: var(--color-surface);
+  padding: 20px;
+  border-bottom: 1px solid var(--color-border);
+  margin-bottom: 20px;
 }
 
-@media (hover: hover) {
-  a:hover {
-    background-color: hsla(160, 100%, 37%, 0.2);
-  }
+header h1 {
+  margin: 0;
 }
 
-@media (min-width: 1024px) {
-  body {
-    display: flex;
-    place-items: center;
-  }
+/* Whitelist input and button */
+.whitelist {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 20px;
+}
 
-  #app {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    padding: 0 2rem;
-  }
-} */
+.whitelist input[type="text"] {
+  flex: 1;
+}
+
+.whitelist button {
+  flex-shrink: 0;
+}
+
+/* Table Styles */
+.result_table {
+  width: 100%;
+  border-collapse: collapse;
+  background-color: var(--color-surface);
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.result_table thead {
+  background-color: var(--color-primary);
+  color: #ffffff;
+}
+
+.result_table th,
+.result_table td {
+  padding: 12px 15px;
+  text-align: left;
+  border-bottom: 1px solid var(--color-border);
+}
+
+.result_table th {
+  cursor: pointer;
+  user-select: none;
+}
+
+.result_table th:hover {
+  background-color: var(--color-secondary);
+}
+
+.result_table tr:nth-child(even) {
+  background-color: var(--color-background);
+}
+
+.result_table th span {
+  margin-left: 5px;
+  font-size: 0.9em;
+}
+
+.result_table tbody tr:hover {
+  background-color: var(--color-background); 
+  cursor: pointer; 
+}

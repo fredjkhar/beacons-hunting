@@ -1,3 +1,4 @@
 .env
+.vite
 .secrets
 .DS_Store
