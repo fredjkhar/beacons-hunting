@@ -22,6 +22,7 @@ services:
   elasticsearch:
     image: fredjk/threat-hunting-elk-stack:elasticsearch-${ELASTIC_VERSION}
     container_name: elasticsearch
+    platform: linux/amd64/v8
     volumes:
       - ./elasticsearch/config/elasticsearch.yml:/usr/share/elasticsearch/config/elasticsearch.yml:ro
       - elasticsearch_data:/usr/share/elasticsearch/data
@@ -42,6 +43,7 @@ services:
   kibana:
     image: fredjk/threat-hunting-elk-stack:kibana-${ELASTIC_VERSION}
     container_name: kibana
+    platform: linux/amd64/v8
     depends_on:
       - elasticsearch
     volumes:
@@ -55,8 +57,9 @@ services:
     restart: unless-stopped
 
   backend:
-    image: fredjk/threat-hunting-backend:django-backend
+    image: fredjk/threat-hunting-backend:latest
     container_name: backend
+    platform: linux/amd64
     depends_on:
       - elasticsearch
     environment:
