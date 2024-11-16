@@ -55,7 +55,7 @@ services:
     restart: unless-stopped
 
   backend:
-    image: fredjk/threat-hunting-backend:django-backend
+    image: fredjk/threat-hunting-backend:latest
     container_name: backend
     depends_on:
       - elasticsearch
