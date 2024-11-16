@@ -6,7 +6,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # Security settings
 SECRET_KEY = 'django-insecure-5^9m19o#9q(yux@lm*0(z00ruo^fm)h7z&@0=0!rrxs4by9e_f'
 DEBUG = True
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
 
 # Application definition
 ELASTICSEARCH_DSL = {
