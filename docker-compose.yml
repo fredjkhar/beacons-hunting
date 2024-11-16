@@ -73,6 +73,17 @@ services:
       - .env
     restart: unless-stopped
 
+  frontend:
+    image: fredjk/threat-hunting-backend:vue-frontend
+    container_name: frontend
+    depends_on:
+      - backend
+    ports:
+      - 8080:80
+    networks:
+      - elk
+    restart: unless-stopped
+
 networks:
   elk:
     driver: bridge
