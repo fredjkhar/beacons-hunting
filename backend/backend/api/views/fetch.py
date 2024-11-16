@@ -3,7 +3,7 @@ from elasticsearch import Elasticsearch
 
 def fetch_data_from_elasticsearch():
     try:
-        es = Elasticsearch([{'host': 'localhost', 'port': 9200, 'scheme': 'http'}])
+        es = Elasticsearch([{'host': 'elasticsearch', 'port': 9200, 'scheme': 'http'}])
 
         query = {
             "size": 10000,
