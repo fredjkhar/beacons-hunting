@@ -59,10 +59,10 @@ services:
     container_name: backend
     depends_on:
       - elasticsearch
-    environment:
-      - SECRET_KEY=${SECRET_KEY}
-      - DEBUG=${DEBUG}
-      - ALLOWED_HOSTS=${ALLOWED_HOSTS}
+    #environment:
+    #  - SECRET_KEY=${SECRET_KEY}
+    #  - DEBUG=${DEBUG}
+    #  - ALLOWED_HOSTS=${ALLOWED_HOSTS}
     ports:
       - 8000:8000
     volumes:
