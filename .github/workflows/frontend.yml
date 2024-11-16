@@ -35,8 +35,8 @@ jobs:
       - name: Build and push Docker image
         uses: docker/build-push-action@v4
         with:
-          context: ./frontend/ransomeware-hunter
-          file: ./frontend/ransomware-hunter/Dockerfile
+          context: .\frontend\ransomware-hunter
+          file: .\frontend\ransomware-hunter\Dockerfile
           # Conditionally push the image when code is merged to main
           push: ${{ github.event_name == 'push' && github.ref == 'refs/heads/main' }}
           # Load the image locally when building during PRs
