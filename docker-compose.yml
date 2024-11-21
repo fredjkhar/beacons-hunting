@@ -74,12 +74,12 @@ services:
     restart: unless-stopped
 
   frontend:
-    image: fredjk/threat-hunting-backend:vue-frontend
+    image: fredjk/threat-hunting-frontend:latest
     container_name: frontend
     depends_on:
       - backend
     ports:
-      - 8080:80
+      - 8080:8080
     networks:
       - elk
     restart: unless-stopped
