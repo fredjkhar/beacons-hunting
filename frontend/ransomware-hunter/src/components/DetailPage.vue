@@ -15,10 +15,10 @@
       <br />
       <button @click="addDestinationToWhitelist">Add destination to Whitelist</button>
       <br />
-      <button @click="addProgramToWhitelist">Add program to Whitelist</button>
+      <!-- <button @click="addProgramToWhitelist">Add program to Whitelist</button>
       <select name="programSelect" id="programSelect" v-model="selectedProgram">
         <option v-for="program in programs" :key="program" :value="program">{{ program }}</option>
-      </select>
+      </select> -->
       <!-- Whitelist End -->
   </template>
   
@@ -31,7 +31,7 @@
       };
     },
     mounted(){
-      this.programs = this.rowData[8].split(" | ");
+      // this.programs = this.rowData[8].split(" | ");
       this.whitelisted_programs = JSON.parse(localStorage.getItem("whitelisted_programs"));
       this.whitelisted_destinations = JSON.parse(localStorage.getItem("whitelisted_destinations"));
       this.whitelisted_sources = JSON.parse(localStorage.getItem("whitelisted_sources"));
@@ -50,25 +50,23 @@
             // // // // // // // // // // // // // // // // //
       // Whitelist functions
       addSourceToWhitelist() {
-        const source = this.rowData[1];
-        if (!this.whitelisted_sources.includes(source)) {
-          this.whitelisted_sources.push(source);
+        if (!this.whitelisted_sources.includes(this.rowData['source.ip'])) {
+          this.whitelisted_sources.push(this.rowData['source.ip']);
           localStorage.setItem("whitelisted_sources", JSON.stringify(this.whitelisted_sources));
         }
       },
       addDestinationToWhitelist() {
-        const destination = this.rowData[2];
-        if (!this.whitelisted_destinations.includes(destination)) {
-          this.whitelisted_destinations.push(destination);
+        if (!this.whitelisted_destinations.includes(this.rowData['destination.ip'])) {
+          this.whitelisted_destinations.push(this.rowData['destination.ip']);
           localStorage.setItem("whitelisted_destinations", JSON.stringify(this.whitelisted_destinations));
         }
       },
-      addProgramToWhitelist(){
-        if (this.selectedProgram && !this.whitelisted_programs.includes(this.selectedProgram)) {
-          this.whitelisted_programs.push(this.selectedProgram)
-          localStorage.setItem("whitelisted_programs", JSON.stringify(this.whitelisted_programs));
-        }
-      }
+      // addProgramToWhitelist(){
+      //   if (this.selectedProgram && !this.whitelisted_programs.includes(this.selectedProgram)) {
+      //     this.whitelisted_programs.push(this.selectedProgram)
+      //     localStorage.setItem("whitelisted_programs", JSON.stringify(this.whitelisted_programs));
+      //   }
+      // }
     },
   };
   </script>
