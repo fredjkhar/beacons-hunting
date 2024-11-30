@@ -79,9 +79,10 @@ export default {
         this.whitelisted_sources = JSON.parse(localStorage.getItem("whitelisted_sources"));
     }
 
-    this.data = JSON.parse(localStorage.getItem("tableData"));
-    console.log(this.data)
-
+    if(localStorage.getItem("tableData") != null){
+      this.data = JSON.parse(localStorage.getItem("tableData"));
+    }
+    
     // try {
     //   // this.whitelisted_programs = JSON.parse(localStorage.getItem("whitelisted_programs"));
     //   // this.whitelisted_destinations = JSON.parse(localStorage.getItem("whitelisted_destinations"));
