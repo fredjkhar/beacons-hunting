@@ -28,13 +28,22 @@
     data() {
       return {
         rowData: null,
+        whitelisted_programs: [],
+        whitelisted_sources: [],
+        whitelisted_destinations: [],
       };
     },
     mounted(){
       // this.programs = this.rowData[8].split(" | ");
-      this.whitelisted_programs = JSON.parse(localStorage.getItem("whitelisted_programs"));
-      this.whitelisted_destinations = JSON.parse(localStorage.getItem("whitelisted_destinations"));
-      this.whitelisted_sources = JSON.parse(localStorage.getItem("whitelisted_sources"));
+      if(localStorage.getItem("whitelisted_programs") != null){
+          this.whitelisted_programs = JSON.parse(localStorage.getItem("whitelisted_programs"));
+      }
+      if(localStorage.getItem("whitelisted_destinations") != null){
+          this.whitelisted_destinations = JSON.parse(localStorage.getItem("whitelisted_destinations"));
+      }
+      if(localStorage.getItem("whitelisted_sources") != null){
+          this.whitelisted_sources = JSON.parse(localStorage.getItem("whitelisted_sources"));
+      }
     },
     created() {
       this.fetchRowData();

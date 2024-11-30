@@ -69,9 +69,15 @@ export default {
   async mounted() {
     this.isLoading = true;
     
-    this.whitelisted_programs = JSON.parse(localStorage.getItem("whitelisted_programs"));
-    this.whitelisted_destinations = JSON.parse(localStorage.getItem("whitelisted_destinations"));
-    this.whitelisted_sources = JSON.parse(localStorage.getItem("whitelisted_sources"));
+    if(localStorage.getItem("whitelisted_programs") != null){
+        this.whitelisted_programs = JSON.parse(localStorage.getItem("whitelisted_programs"));
+    }
+    if(localStorage.getItem("whitelisted_destinations") != null){
+        this.whitelisted_destinations = JSON.parse(localStorage.getItem("whitelisted_destinations"));
+    }
+    if(localStorage.getItem("whitelisted_sources") != null){
+        this.whitelisted_sources = JSON.parse(localStorage.getItem("whitelisted_sources"));
+    }
 
     this.data = JSON.parse(localStorage.getItem("tableData"));
     console.log(this.data)
