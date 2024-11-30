@@ -4,6 +4,7 @@ import { createRouter, createWebHistory } from "vue-router";
 import ResultTable from "./components/ResultTable.vue";
 import DetailPage from "./components/DetailPage.vue";
 import Whitelist from "./components/Whitelist.vue";
+import GenerateReport from "./components/GenerateReport.vue";
 
 const routes = [
   {
@@ -21,6 +22,11 @@ const routes = [
     path: "/whitelist",
     name: "Whitelist",
     component: Whitelist,
+  },
+  {
+    path: "/generate",
+    name: "GenerateReport",
+    component: GenerateReport,
   },
 ];
 
