@@ -3,7 +3,7 @@ from elasticsearch import Elasticsearch
 
 def fetch_data_from_elasticsearch(start_time, end_time):
     try:
-        es = Elasticsearch([{'host': 'localhost', 'port': 9200, 'scheme': 'http'}])
+        es = Elasticsearch([{'host': 'elasticsearch', 'port': 9200, 'scheme': 'http'}])
 
         query = {
             "size": 10000,
@@ -33,7 +33,7 @@ def fetch_data_from_elasticsearch(start_time, end_time):
 
 def fetch_data_from_elasticsearch_last_24h():
     try:
-        es = Elasticsearch([{'host': 'localhost', 'port': 9200, 'scheme': 'http'}])
+        es = Elasticsearch([{'host': 'elasticsearch', 'port': 9200, 'scheme': 'http'}])
 
         query = {
             "size": 10000,

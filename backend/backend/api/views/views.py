@@ -24,7 +24,8 @@ def my_view(request):
             datetime.strptime(start_time, "%Y-%m-%dT%H:%M:%S")
             datetime.strptime(end_time, "%Y-%m-%dT%H:%M:%S")
         except ValueError as e:
-            return JsonResponse({'error': f'Invalid datetime format: {e}'}, status=400)
+            print(f'Invalid datetime format: {e}')  # Log the detailed error message
+            return JsonResponse({'error': 'Invalid datetime format.'}, status=400)
 
         df_original = fetch_data_from_elasticsearch(start_time, end_time)
         
