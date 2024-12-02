@@ -19,6 +19,7 @@
 <script>
     import {
     fetchBackendData,
+    fetchBackendDataWithDates,
     getSortedTableData,
     toggleSort,
     } from "./ResultTable.js";
@@ -54,28 +55,41 @@
                 return `${year}-${month}-${day}T${hours}:${minutes}`;
             },
             async generateReport() {
-                console.log("Generating report from", this.startDate, "to", this.endDate);
+                // console.log("Generating report from", this.startDate, "to", this.endDate);
 
-                const backendData = await fetchBackendData(
-                    "http://34.67.212.1:8000/api/get/"  
-                );
-                this.data = backendData.map((item, index) => {
-                    const { "ConnectionTimes": _, ...rest } = item; // Use exact field name
-                    return {
-                    id: index + 1, // Start IDs from 1
-                    ...rest,
-                    };
-                });
+                if(this.startDate == null || this.endDate == null){
+                    const backendData = await fetchBackendData(
+                        "http://34.67.212.1:8000/api/get/"
+                    );
+                    this.data = backendData.map((item, index) => {
+                        const { "ConnectionTimes": _, ...rest } = item; // Use exact field name
+                        return {
+                        id: index + 1, // Start IDs from 1
+                        ...rest,
+                        };
+                    });
+                }
+                else{
+                    console.log(this.startDate)
+                    console.log(this.endDate)
+                    const backendData = await fetchBackendDataWithDates(
+                        "http://34.67.212.1:8000/api/get/",
+                        this.startDate,
+                        this.endDate
+                    );
+                    this.data = backendData.map((item, index) => {
+                        const { "ConnectionTimes": _, ...rest } = item; // Use exact field name
+                        return {
+                        id: index + 1, // Start IDs from 1
+                        ...rest,
+                        };
+                    });
+                }
 
                 // Store the data in localStorage
                 localStorage.setItem("tableData", JSON.stringify(this.data));
 
                 console.log(this.data)
-
-                // Add logic for generating the report
-                // api/get with start and end dates // This will replace the api/get in the ResultTable page
-                // store in localStorage
-                // route to Result Table
             },
         },
     };
