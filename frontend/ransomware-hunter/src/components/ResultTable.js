@@ -13,6 +13,32 @@ export async function fetchBackendData(endpoint = "/api/get/") {
       return []; // Return an empty array on error
     }
   }
+
+  export async function fetchBackendDataWithDates(endpoint = "/api/get/", startTime = null, endTime = null) {
+    try {
+      // Construct query parameters
+      // console.log(startTime)
+      // console.log(endTime)
+      const queryParams = new URLSearchParams();
+      if (startTime) queryParams.append("start_time", startTime);
+      if (endTime) queryParams.append("end_time", endTime);
+  
+      // Append query parameters to the endpoint
+      const url = queryParams.toString() ? `${endpoint}?start_time=${startTime}:00&end_time=${endTime}:00` : endpoint;
+      
+      console.log('?start_time=' + startTime + '&end_time=' + endTime)
+
+      const response = await fetch(url);
+      if (!response.ok) {
+        throw new Error("Failed to fetch data from the backend");
+      }
+      const data = await response.json();
+      return data;
+    } catch (error) {
+      console.error(error.message);
+      return []; // Return an empty array on error
+    }
+  }
   
   export function getSortedTableData(data, sortKey, sortAsc) {
     if (!sortKey) return data;
