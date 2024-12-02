@@ -1,0 +1,33 @@
+# Ignore node_modules and logs
+node_modules
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Ignore local environment files
+.env
+.env.*.local
+
+# Ignore build output (if it's created locally before the Docker build)
+dist/
+build/
+
+# Ignore IDE/editor files
+.vscode/
+.idea/
+*.swp
+*.swo
+*.swn
+
+# Ignore operating system files
+.DS_Store
+Thumbs.db
+
+# Ignore Docker-related files if they aren't needed in the image
+.dockerignore
+docker-compose.yml
+
+# Ignore tests and development files
+tests/
+__tests__/
+coverage/

@@ -1,6 +1,6 @@
 from django.http import JsonResponse
-from .fetch import fetch_data_from_elasticsearch
-
+from .fetch import fetch_data_from_elasticsearch, fetch_data_from_elasticsearch_last_24h
+from datetime import datetime
 from .process import process_data
 
 import os
@@ -11,8 +11,25 @@ def my_view(request):
     #BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
     #csv_file_path = os.path.join(BASE_DIR, 'data', 'data.csv')
     #df_original = fetch_data_from_csv(csv_file_path)
+    
+    start_time = request.GET.get('start_time')
+    end_time = request.GET.get('end_time')
 
-    df_original = fetch_data_from_elasticsearch()
+    if(not start_time or not end_time):
+        print("here")
+        df_original = fetch_data_from_elasticsearch_last_24h()
+    else:
+        try:
+            # Validate datetime format
+            datetime.strptime(start_time, "%Y-%m-%dT%H:%M:%S")
+            datetime.strptime(end_time, "%Y-%m-%dT%H:%M:%S")
+        except ValueError as e:
+            print(f'Invalid datetime format: {e}')  # Log the detailed error message
+            return JsonResponse({'error': 'Invalid datetime format.'}, status=400)
+
+        df_original = fetch_data_from_elasticsearch(start_time, end_time)
+        
+    print(df_original)
     print(len(df_original))
 
     if df_original.empty:
