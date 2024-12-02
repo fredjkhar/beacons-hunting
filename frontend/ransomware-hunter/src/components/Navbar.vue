@@ -3,7 +3,7 @@
         <div class="project-name">Ransomeware Hunter</div>
         <div class="menu-items">
             <div class="item"><router-link to="/">Home</router-link></div>
-            <div class="item"><router-link to="/">Generate Report</router-link></div>
+            <div class="item"><router-link to="/generate">Generate Report</router-link></div>
             <div class="item"><router-link to="/">View Report</router-link></div>
             <div class="item"><router-link to="/whitelist">Whitelist Items</router-link></div>
         </div>

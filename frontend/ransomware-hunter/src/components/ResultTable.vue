@@ -68,30 +68,47 @@ export default {
   },
   async mounted() {
     this.isLoading = true;
-    try {
-      this.whitelisted_programs = JSON.parse(localStorage.getItem("whitelisted_programs"));
-      this.whitelisted_destinations = JSON.parse(localStorage.getItem("whitelisted_destinations"));
-      this.whitelisted_sources = JSON.parse(localStorage.getItem("whitelisted_sources"));
-
-      const backendData = await fetchBackendData(
-        "http://backend:8000/api/get/"
-      );
-      this.data = backendData.map((item, index) => {
-        const { "ConnectionTimes": _, ...rest } = item; // Use exact field name
-        return {
-          id: index + 1, // Start IDs from 1
-          ...rest,
-        };
-      });
-
-      // Store the data in localStorage
-      localStorage.setItem("tableData", JSON.stringify(this.data));
-    } catch (error) {
-      console.error("Error during fetch:", error);
-      this.error = "Failed to load data.";
-    } finally {
-      this.isLoading = false;
+    
+    if(localStorage.getItem("whitelisted_programs") != null){
+        this.whitelisted_programs = JSON.parse(localStorage.getItem("whitelisted_programs"));
     }
+    if(localStorage.getItem("whitelisted_destinations") != null){
+        this.whitelisted_destinations = JSON.parse(localStorage.getItem("whitelisted_destinations"));
+    }
+    if(localStorage.getItem("whitelisted_sources") != null){
+        this.whitelisted_sources = JSON.parse(localStorage.getItem("whitelisted_sources"));
+    }
+
+    if(localStorage.getItem("tableData") != null){
+      this.data = JSON.parse(localStorage.getItem("tableData"));
+    }
+    
+    // try {
+    //   // this.whitelisted_programs = JSON.parse(localStorage.getItem("whitelisted_programs"));
+    //   // this.whitelisted_destinations = JSON.parse(localStorage.getItem("whitelisted_destinations"));
+    //   // this.whitelisted_sources = JSON.parse(localStorage.getItem("whitelisted_sources"));
+
+    //   // localStorage.setItem("tableData", JSON.stringify(this.data));
+
+    //   const backendData = await fetchBackendData(
+    //     "http://34.67.212.1:8000/api/get/"  
+    //   );
+    //   this.data = backendData.map((item, index) => {
+    //     const { "ConnectionTimes": _, ...rest } = item; // Use exact field name
+    //     return {
+    //       id: index + 1, // Start IDs from 1
+    //       ...rest,
+    //     };
+    //   });
+
+    //   // Store the data in localStorage
+    //   localStorage.setItem("tableData", JSON.stringify(this.data));
+    // } catch (error) {
+    //   console.error("Error during fetch:", error);
+    //   this.error = "Failed to load data.";
+    // } finally {
+    //   this.isLoading = false;
+    // }
   },
   computed: {
     headers() {
