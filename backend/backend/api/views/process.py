@@ -32,7 +32,7 @@ def process_data(df_original):
     )
 
     df["ConnectionTimes"] = df["ConnectionTimes"].apply(
-        lambda x: sorted([parse(t) for t in x])
+        lambda x: sorted([parse(t.strftime('%Y-%m-%dT%H:%M:%SZ')) for t in x])
     )
 
     df["Skew score"] = df["ConnectionTimes"].apply(compute_bowleys_skewness)

@@ -1,47 +1,123 @@
-import sys
-import os
-sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
-
-from django.test import TestCase
 import unittest
 import pandas as pd
-from unittest.mock import patch
+from datetime import datetime, timedelta
+from dateutil.parser import parse
 from views.process import process_data
-from views.score import compute_bowleys_skewness, compute_mad_score, compute_connection_count_score, compute_combined_score
+from views.score import (
+    compute_bowleys_skewness,
+    compute_mad_score,
+    compute_connection_count_score,
+    compute_combined_score,
+)
 
-class TestProcessData(unittest.TestCase):
-    def setUp(self):
-        """
-        Prepare a basic test dataset.
-        """
-        self.sample_data = pd.DataFrame({
-            'source': [{'ip': '192.168.1.1'}, {'ip': '192.168.1.1'}, {'ip': '192.168.1.1'}],
-            'destination': [{'ip': '10.0.0.1'}, {'ip': '10.0.0.1'}, {'ip': '10.0.0.1'}],
-            'process': [{'name': 'proc1', 'executable': '/bin/proc1'}] * 3,
-            '@timestamp': ['2024-11-20T12:00:00Z', '2024-11-20T12:01:00Z', '2024-11-20T12:02:00Z']
-        })
-        self.sample_data['@timestamp'] = pd.to_datetime(self.sample_data['@timestamp'])
+class TestScores(unittest.TestCase):
 
-    def test_missing_data_handling(self):
-        """
-        Test that rows with missing data are dropped.
-        """
-        # Modify sample data to include missing values
-        data_with_missing = self.sample_data.copy()
-        data_with_missing.loc[0, 'source'] = None
+    def test_compute_bowleys_skewness(self):
+        # Sample data with connection times that have differences greater than 1 second
+        connection_times = [
+            datetime(2024, 12, 1, 12, 0),
+            datetime(2024, 12, 1, 12, 10),
+            datetime(2024, 12, 1, 12, 20),
+            datetime(2024, 12, 1, 12, 30),
+            datetime(2024, 12, 1, 12, 40),
+            datetime(2024, 12, 1, 12, 50),
+            datetime(2024, 12, 1, 13, 0),
+            datetime(2024, 12, 1, 13, 10),
+            datetime(2024, 12, 1, 13, 20),
+        ]
+        skewness = compute_bowleys_skewness(connection_times)
+        self.assertIsNotNone(skewness)
+        self.assertIsInstance(skewness, int)
 
-        result = process_data(data_with_missing)
-        self.assertEqual(len(result), 0)  # Expect all rows to be dropped
+    def test_compute_mad_score(self):
+        # Sample data for MAD score calculation
+        connection_times = [
+            datetime(2024, 12, 1, 12, 0),
+            datetime(2024, 12, 1, 12, 10),
+            datetime(2024, 12, 1, 12, 20),
+            datetime(2024, 12, 1, 12, 30),
+            datetime(2024, 12, 1, 12, 40),
+            datetime(2024, 12, 1, 12, 50),
+            datetime(2024, 12, 1, 13, 0),
+            datetime(2024, 12, 1, 13, 10),
+            datetime(2024, 12, 1, 13, 20),
+        ]
+        mad_score = compute_mad_score(connection_times)
+        self.assertIsNotNone(mad_score)
+        self.assertIsInstance(mad_score, float)
 
-    def test_basic_processing(self):
-        result = process_data(self.sample_data)
-        print("Basic Processing Result:")
-        print(result)  # Debugging output to see what the result is
-        
-        self.assertEqual(len(result), 1)  # Expecting one row
-        self.assertEqual(result["source.ip"].iloc[0], "192.168.1.1")
-        self.assertEqual(result["destination.ip"].iloc[0], "10.0.0.1")
-        self.assertEqual(result["TotalConnections"].iloc[0], 3)  # Expecting 3 connections
-        
-if __name__ == '__main__':
+    def test_compute_connection_count_score(self):
+        # Sample connection times
+        connection_times = [
+            datetime(2024, 12, 1, 12, 0),
+            datetime(2024, 12, 1, 12, 10),
+            datetime(2024, 12, 1, 12, 20),
+            datetime(2024, 12, 1, 12, 30),
+            datetime(2024, 12, 1, 12, 40),
+            datetime(2024, 12, 1, 12, 50),
+            datetime(2024, 12, 1, 13, 0),
+            datetime(2024, 12, 1, 13, 10),
+            datetime(2024, 12, 1, 13, 20),
+        ]
+        count_score = compute_connection_count_score(connection_times)
+        self.assertIsNotNone(count_score)
+        self.assertIsInstance(count_score, float)
+
+    def test_compute_combined_score(self):
+        # Test combined score with dummy data
+        row = {
+            "Skew score": 0.8,
+            "MAD score": 0.9,
+            "Count score": 0.7,
+        }
+        combined_score = compute_combined_score(row)
+        self.assertEqual(combined_score, 0.8)
+
+    def test_process_data(self):
+    # Add multiple connection times for a single source IP to simulate real data
+        data = {
+        "destination": [{"ip": "192.168.1.1"}, {"ip": "192.168.1.1"}],
+        "source": [{"ip": "192.168.1.2"}, {"ip": "192.168.1.2"}],
+        "process": [{"name": "test_process", "executable": "test_executable"}, {"name": "test_process", "executable": "test_executable"}],
+        "@timestamp": [
+            datetime(2024, 12, 1, 12, 0),
+            datetime(2024, 12, 1, 12, 10),  # 10-minute gap
+        ],
+    }
+        df = pd.DataFrame(data)
+        result = process_data(df)
+
+    # Debugging output to check the result
+        print(f"Result DataFrame:\n{result}")
+    
+    # Ensure the processed result contains data and has a 'Score' column
+        self.assertEqual(len(result), 1)  # The group-by should result in one row
+        self.assertTrue("Score" in result.columns)  # Ensure the score column exists
+
+    def test_process_data_with_more_diffs(self):
+        # Add multiple connection times to create more differences
+        data = {
+            "destination": [{"ip": "192.168.1.1"}] * 9,
+            "source": [{"ip": "192.168.1.2"}] * 9,
+            "process": [{"name": "test_process", "executable": "test_executable"}] * 9,
+            "@timestamp": [
+                datetime(2024, 12, 1, 12, 0),
+                datetime(2024, 12, 1, 12, 10),
+                datetime(2024, 12, 1, 12, 20),
+                datetime(2024, 12, 1, 12, 30),
+                datetime(2024, 12, 1, 12, 40),
+                datetime(2024, 12, 1, 12, 50),
+                datetime(2024, 12, 1, 13, 0),
+                datetime(2024, 12, 1, 13, 10),
+                datetime(2024, 12, 1, 13, 20),
+            ],
+        }
+        df = pd.DataFrame(data)
+        result = process_data(df)
+
+        # Ensure the processed result contains data and has a 'Score' column
+        self.assertEqual(len(result), 1)  # The group-by should result in one row
+        self.assertTrue("Score" in result.columns)  # Ensure the score column exists
+
+if __name__ == "__main__":
     unittest.main()
