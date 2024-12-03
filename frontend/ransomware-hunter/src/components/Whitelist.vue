@@ -55,9 +55,15 @@ export default {
         };
     },
     mounted() {
-        this.whitelisted_programs = JSON.parse(localStorage.getItem("whitelisted_programs"));
-        this.whitelisted_destinations = JSON.parse(localStorage.getItem("whitelisted_destinations"));
-        this.whitelisted_sources = JSON.parse(localStorage.getItem("whitelisted_sources"));
+        if(localStorage.getItem("whitelisted_programs") != null){
+            this.whitelisted_programs = JSON.parse(localStorage.getItem("whitelisted_programs"));
+        }
+        if(localStorage.getItem("whitelisted_destinations") != null){
+            this.whitelisted_destinations = JSON.parse(localStorage.getItem("whitelisted_destinations"));
+        }
+        if(localStorage.getItem("whitelisted_sources") != null){
+            this.whitelisted_sources = JSON.parse(localStorage.getItem("whitelisted_sources"));
+        }
     },
     methods: {
         addToPrograms(newItem) {
@@ -73,6 +79,7 @@ export default {
         addToDestinations(newItem) {
             if (newItem && newItem.trim() !== "") {
                 // Add to the array and save to localStorage
+                console.log(this.whitelisted_destinations)
                 this.whitelisted_destinations.push(newItem);
                 localStorage.setItem("whitelisted_destinations", JSON.stringify(this.whitelisted_destinations));
                 this.whitelisted_item = ""; // Clear the input field

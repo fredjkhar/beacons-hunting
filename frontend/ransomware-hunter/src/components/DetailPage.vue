@@ -7,10 +7,12 @@
       <div v-for="(value, key) in rowData" :key="key" class="mb-1">
         <div v-if="key == 'ConnectionTimes'">
           <details>
-          <summary><strong>{{ key }}: </strong></summary>
-          <ul v-for="(time, index) in value" :key="index">
-            <li>{{ time }}</li>
-          </ul>
+            <summary>
+              <strong>{{ key }}: </strong>
+            </summary>
+            <ul v-for="(time, index) in value" :key="index">
+              <li>{{ time }}</li>
+            </ul>
           </details>
         </div>
         <div v-else>
@@ -40,19 +42,28 @@ export default {
   data() {
     return {
       rowData: null,
+      whitelisted_programs: [],
+      whitelisted_sources: [],
+      whitelisted_destinations: [],
     };
   },
   mounted() {
     // this.programs = this.rowData[8].split(" | ");
-    this.whitelisted_programs = JSON.parse(
-      localStorage.getItem("whitelisted_programs")
-    );
-    this.whitelisted_destinations = JSON.parse(
-      localStorage.getItem("whitelisted_destinations")
-    );
-    this.whitelisted_sources = JSON.parse(
-      localStorage.getItem("whitelisted_sources")
-    );
+    if (localStorage.getItem("whitelisted_programs") != null) {
+      this.whitelisted_programs = JSON.parse(
+        localStorage.getItem("whitelisted_programs")
+      );
+    }
+    if (localStorage.getItem("whitelisted_destinations") != null) {
+      this.whitelisted_destinations = JSON.parse(
+        localStorage.getItem("whitelisted_destinations")
+      );
+    }
+    if (localStorage.getItem("whitelisted_sources") != null) {
+      this.whitelisted_sources = JSON.parse(
+        localStorage.getItem("whitelisted_sources")
+      );
+    }
   },
   created() {
     this.fetchRowData();
@@ -65,7 +76,7 @@ export default {
     goBack() {
       this.$router.push("/");
     },
-    // // // // // // // // // // // // // // // // //
+    
     // Whitelist functions
     addSourceToWhitelist() {
       if (!this.whitelisted_sources.includes(this.rowData["source.ip"])) {
