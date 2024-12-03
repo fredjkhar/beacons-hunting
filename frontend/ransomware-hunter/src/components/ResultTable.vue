@@ -74,13 +74,12 @@ export default {
       this.whitelisted_sources = JSON.parse(localStorage.getItem("whitelisted_sources"));
 
       const backendData = await fetchBackendData(
-        "http://backend:8000/api/get/"
+        "http://127.0.0.1:8000/api/get/"
       );
       this.data = backendData.map((item, index) => {
-        const { "ConnectionTimes": _, ...rest } = item; // Use exact field name
         return {
           id: index + 1, // Start IDs from 1
-          ...rest,
+          ...item,
         };
       });
 
@@ -97,7 +96,7 @@ export default {
     headers() {
       // Exclude 'id' from headers
       return this.data.length
-        ? Object.keys(this.data[0]).filter((key) => key !== "id")
+        ? Object.keys(this.data[0]).filter((key) => !(key === "id" || key === "ConnectionTimes"))
         : [];
     },
     sortedData() {

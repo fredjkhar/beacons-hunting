@@ -1,72 +1,98 @@
 <!-- DetailPage.vue -->
 
 <template>
-    <div class="container">
-      <h1>Beacon Score</h1>
-      <div v-if="rowData">
-        <div v-for="(value, key) in rowData" :key="key" class="mb-1">
+  <div class="container">
+    <h1>Beacon Score</h1>
+    <div v-if="rowData">
+      <div v-for="(value, key) in rowData" :key="key" class="mb-1">
+        <div v-if="key == 'ConnectionTimes'">
+          <details>
+          <summary><strong>{{ key }}: </strong></summary>
+          <ul v-for="(time, index) in value" :key="index">
+            <li>{{ time }}</li>
+          </ul>
+          </details>
+        </div>
+        <div v-else>
           <strong>{{ key }}:</strong> {{ value }}
         </div>
       </div>
-      <button @click="goBack">Back to Table</button>
+      <div v-if="rowData">
+        <connections-graph :rowData="rowData" />
+      </div>
     </div>
-          <!-- Whitelist Start -->
-          <button @click="addSourceToWhitelist">Add source to Whitelist</button>
-      <br />
-      <button @click="addDestinationToWhitelist">Add destination to Whitelist</button>
-      <br />
-      <!-- <button @click="addProgramToWhitelist">Add program to Whitelist</button>
-      <select name="programSelect" id="programSelect" v-model="selectedProgram">
-        <option v-for="program in programs" :key="program" :value="program">{{ program }}</option>
-      </select> -->
-      <!-- Whitelist End -->
-  </template>
+    <button @click="goBack">Back to Table</button>
+    <!-- Whitelist Start -->
+    <button @click="addSourceToWhitelist">Add source to Whitelist</button>
+    <br />
+    <button @click="addDestinationToWhitelist">
+      Add destination to Whitelist
+    </button>
+    <br />
+  </div>
+</template>
   
   <script>
-  export default {
-    props: ["id"],
-    data() {
-      return {
-        rowData: null,
-      };
+import ConnectionsGraph from "./ConnectionsGraph.vue";
+export default {
+  components: { ConnectionsGraph },
+  props: ["id"],
+  data() {
+    return {
+      rowData: null,
+    };
+  },
+  mounted() {
+    // this.programs = this.rowData[8].split(" | ");
+    this.whitelisted_programs = JSON.parse(
+      localStorage.getItem("whitelisted_programs")
+    );
+    this.whitelisted_destinations = JSON.parse(
+      localStorage.getItem("whitelisted_destinations")
+    );
+    this.whitelisted_sources = JSON.parse(
+      localStorage.getItem("whitelisted_sources")
+    );
+  },
+  created() {
+    this.fetchRowData();
+  },
+  methods: {
+    fetchRowData() {
+      const allData = JSON.parse(localStorage.getItem("tableData")) || [];
+      this.rowData = allData.find((row) => row.id === parseInt(this.id));
     },
-    mounted(){
-      // this.programs = this.rowData[8].split(" | ");
-      this.whitelisted_programs = JSON.parse(localStorage.getItem("whitelisted_programs"));
-      this.whitelisted_destinations = JSON.parse(localStorage.getItem("whitelisted_destinations"));
-      this.whitelisted_sources = JSON.parse(localStorage.getItem("whitelisted_sources"));
+    goBack() {
+      this.$router.push("/");
     },
-    created() {
-      this.fetchRowData();
+    // // // // // // // // // // // // // // // // //
+    // Whitelist functions
+    addSourceToWhitelist() {
+      if (!this.whitelisted_sources.includes(this.rowData["source.ip"])) {
+        this.whitelisted_sources.push(this.rowData["source.ip"]);
+        localStorage.setItem(
+          "whitelisted_sources",
+          JSON.stringify(this.whitelisted_sources)
+        );
+      }
     },
-    methods: {
-      fetchRowData() {
-        const allData = JSON.parse(localStorage.getItem("tableData")) || [];
-        this.rowData = allData.find((row) => row.id === parseInt(this.id));
-      },
-      goBack() {
-        this.$router.push("/");
-      },
-            // // // // // // // // // // // // // // // // //
-      // Whitelist functions
-      addSourceToWhitelist() {
-        if (!this.whitelisted_sources.includes(this.rowData['source.ip'])) {
-          this.whitelisted_sources.push(this.rowData['source.ip']);
-          localStorage.setItem("whitelisted_sources", JSON.stringify(this.whitelisted_sources));
-        }
-      },
-      addDestinationToWhitelist() {
-        if (!this.whitelisted_destinations.includes(this.rowData['destination.ip'])) {
-          this.whitelisted_destinations.push(this.rowData['destination.ip']);
-          localStorage.setItem("whitelisted_destinations", JSON.stringify(this.whitelisted_destinations));
-        }
-      },
-      // addProgramToWhitelist(){
-      //   if (this.selectedProgram && !this.whitelisted_programs.includes(this.selectedProgram)) {
-      //     this.whitelisted_programs.push(this.selectedProgram)
-      //     localStorage.setItem("whitelisted_programs", JSON.stringify(this.whitelisted_programs));
-      //   }
-      // }
+    addDestinationToWhitelist() {
+      if (
+        !this.whitelisted_destinations.includes(this.rowData["destination.ip"])
+      ) {
+        this.whitelisted_destinations.push(this.rowData["destination.ip"]);
+        localStorage.setItem(
+          "whitelisted_destinations",
+          JSON.stringify(this.whitelisted_destinations)
+        );
+      }
     },
-  };
-  </script>
+    // addProgramToWhitelist(){
+    //   if (this.selectedProgram && !this.whitelisted_programs.includes(this.selectedProgram)) {
+    //     this.whitelisted_programs.push(this.selectedProgram)
+    //     localStorage.setItem("whitelisted_programs", JSON.stringify(this.whitelisted_programs));
+    //   }
+    // }
+  },
+};
+</script>
