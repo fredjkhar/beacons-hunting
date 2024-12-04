@@ -83,38 +83,12 @@ export default {
       this.data = JSON.parse(localStorage.getItem("tableData"));
     }
     
-    // try {
-    //   // this.whitelisted_programs = JSON.parse(localStorage.getItem("whitelisted_programs"));
-    //   // this.whitelisted_destinations = JSON.parse(localStorage.getItem("whitelisted_destinations"));
-    //   // this.whitelisted_sources = JSON.parse(localStorage.getItem("whitelisted_sources"));
-
-    //   // localStorage.setItem("tableData", JSON.stringify(this.data));
-
-    //   const backendData = await fetchBackendData(
-    //     "http://34.67.212.1:8000/api/get/"  
-    //   );
-    //   this.data = backendData.map((item, index) => {
-    //     const { "ConnectionTimes": _, ...rest } = item; // Use exact field name
-    //     return {
-    //       id: index + 1, // Start IDs from 1
-    //       ...rest,
-    //     };
-    //   });
-
-    //   // Store the data in localStorage
-    //   localStorage.setItem("tableData", JSON.stringify(this.data));
-    // } catch (error) {
-    //   console.error("Error during fetch:", error);
-    //   this.error = "Failed to load data.";
-    // } finally {
-    //   this.isLoading = false;
-    // }
   },
   computed: {
     headers() {
       // Exclude 'id' from headers
       return this.data.length
-        ? Object.keys(this.data[0]).filter((key) => key !== "id")
+        ? Object.keys(this.data[0]).filter((key) => !(key === "id" || key === "ConnectionTimes"))
         : [];
     },
     sortedData() {
@@ -153,65 +127,7 @@ export default {
         return false;
       });
     },
-    // // // // // // // // // // // // // // // // // // // //
-    // Using whitelisted items from local storage to filter results
-    // checkWhitelistTest(row) {
-    //   console.log("HERE")
-    //   if(this.whitelisted_programs) {
-    //     if(this.whitelisted_programs.some((program) => row.program?.includes(program))){
-    //       return false;
-    //     }
-    //   }
-    //   if(this.whitelisted_destination){
-    //     if(this.whitelisted_destinations.some((destination) => row.destination?.includes(destination))){
-    //       return false;
-    //     }
-    //   }
-    //   if(this.whitelisted_sources){
-    //     if(this.whitelisted_sources.some((source) => row.source?.includes(source))){
-    //       return false;
-    //     }
-    //   }
-    //   return true
-    // }
-
-    // whitelistedRowTest(row) {
-    //   console.log(row)
-    //   if (this.whitelisted_programs && this.ba) {
-    //     // Ensure `row.program` exists before accessing `.includes`
-    //     if (
-    //       this.whitelisted_programs.some((program) =>
-    //         row.program?.includes(program)
-    //       )
-    //     ) {
-    //       return false;
-    //     }
-    //   }
-
-    //   if (this.whitelisted_destinations) {
-    //     // Ensure `row.destination` exists before accessing `.includes`
-    //     if (
-    //       this.whitelisted_destinations.some((destination) =>
-    //         row.destination?.includes(destination)
-    //       )
-    //     ) {
-    //       return false;
-    //     }
-    //   }
-
-    //   if (this.whitelisted_sources) {
-    //     // Ensure `row.source` exists before accessing `.includes`
-    //     if (
-    //       this.whitelisted_sources.some((source) =>
-    //         row.source?.includes(source)
-    //       )
-    //     ) {
-    //       return false;
-    //     }
-    //   }
-
-    //   return true;
-    // }
+    
     whitelistedRowTest(row) {
       const rowArray = Object.entries(row);
 

@@ -57,34 +57,25 @@
             async generateReport() {
                 // console.log("Generating report from", this.startDate, "to", this.endDate);
 
+                let backendData;
                 if(this.startDate == null || this.endDate == null){
-                    const backendData = await fetchBackendData(
+                    backendData = await fetchBackendData(
                         "http://34.67.212.1:8000/api/get/"
                     );
-                    this.data = backendData.map((item, index) => {
-                        const { "ConnectionTimes": _, ...rest } = item; // Use exact field name
-                        return {
-                        id: index + 1, // Start IDs from 1
-                        ...rest,
-                        };
-                    });
                 }
                 else{
-                    console.log(this.startDate)
-                    console.log(this.endDate)
-                    const backendData = await fetchBackendDataWithDates(
+                    backendData = await fetchBackendDataWithDates(
                         "http://34.67.212.1:8000/api/get/",
                         this.startDate,
                         this.endDate
                     );
-                    this.data = backendData.map((item, index) => {
-                        const { "ConnectionTimes": _, ...rest } = item; // Use exact field name
-                        return {
-                        id: index + 1, // Start IDs from 1
-                        ...rest,
-                        };
-                    });
                 }
+                this.data = backendData.map((item, index) => {
+                    return {
+                    id: index + 1, // Start IDs from 1
+                    ...item,
+                    };
+                });
 
                 // Store the data in localStorage
                 localStorage.setItem("tableData", JSON.stringify(this.data));
