@@ -1,102 +1,23 @@
-### Python 3.13
+# Installing Sysmon and Winlogbeat on client machines (Windows)
 
-# Beacon Simulator
+## Installation/Setup
+### Step 1: Install and configure Sysmon
+1. Download Sysmon from https://learn.microsoft.com/en-us/sysinternals/downloads/sysmon
+2. Navigate to where Sysmon is installed and run **with administrative priviledges** `./sysmon64.exe -accepteula -i`
+3. Copy the Sysmon configuration file from the repository (`sysmon-config.xml`) to where Sysmon is installed
+4. Run `./sysmon64.exe -c sysmonconfig.xml` **with administrative priviledges**
+5. Sysmon is now installed and configured
 
-The beacon simulator script (`beacon-simulator`) is used to simulate beaconing activity. This can help in testing detection models and network monitoring tools by sending periodic traffic to a specified destination.
-
----
-
-## **How to Use the Beacon Simulator**
-
-### **1. Prerequisites**
-- Ensure you have Python installed on your machine.
-- The script is executable on any machine capable of running Python.
-- Ensure you have a VM ready to receive beacons
-
-### **2. On the VM**
- - Desactivate firewalls (if windows it is under system and security)
- - Open PowerShell as Administrator and run the following command : 
-    Run VM Listener : 
-        System.Net.Sockets.TcpListener('0.0.0.0', 9999)
-        $listener.Start()
- - VM is now ready to receive beacons
-
-### **3. On the host**
- - Desactivate firewalls 
- - Go to script path 
- - run the following command : 
-    Run python Script : 
-        python beacon-simulator.py -ip 192.168.37.128 -p 9999 -i 150 -j 10 --tcp -m 100
-    Change the variables accordingly to the VM ip, -p, -i, -j, --tcp, -m : 
-        python beacon-simulator.py -ip <target_ip> -p <target_port> -i <interval> -j <jitter> --tcp -m <max_payload>
-
-
-### **4. On Wireshark**
-
- - Under VMnet8 we can vizualise the activity between IP host and VM`s IP 
-
-### **5. Screenshots**
-
-
-
-
-
-# Installing Sysmon and Winlogbeat with the setup script 
-
-## **How to Use the script**
-
-
-
-### **README for Setup Script**
-Save this file as `scripts/config/README.md`:
-
-```markdown
-# Sysmon and Winlogbeat Setup Script
-
-The setup script (`setup.ps1`) automates the installation and configuration of **Sysmon** and **Winlogbeat**. It ensures logs are collected and forwarded according to the specified configuration files.
-
-
-
-## **How to Use the Setup Script**
-
-### **1. Prerequisites**
-- **Administrator Privileges**: The script requires elevated permissions to install and configure services.
-- **Internet Access**: Required to download Sysmon, Winlogbeat, and configuration files.
-
-
-### **2. Repository Structure**
- **Ensure the repository is structured as follows:**
-
- scripts/
-    sysmon-config.yml     # Sysmon configuration file
-    winlogbeat.yml        # Winlogbeat configuration file
-    config/
-        setup.ps1         # PowerShell script for 
-  Navigate to the file where the script is located : cd C:\path\to\scripts\config
-  Execute the script : powershell.exe -ExecutionPolicy Bypass -File .\setup.ps1
-
-
+### Step 2: Install and run Winlogbeat
+1. Download Winlogbeat from https://www.elastic.co/downloads/beats/winlogbeat and unzip it. 
+2. Copy the config file (`winlogbeat.yml`) to where `winlogbeat.exe` is located
+3. Run `PowerShell.exe -ExecutionPolicy UnRestricted -File .\install-service-winlogbeat.ps1` **with administrative priviledges**
+4. Run `.\winlogbeat.exe setup -e` **with administrative priviledges**
+5. Run `Start-Service winlogbeat` **with administrative priviledges**
+6. You should start seeing sysmon events being ingested by elastic
+![alt text](./images/kibana-dashboard.png)
     
 
-### **3. Script Workflow**
-
-    
-The script performs the following steps:
-
-    Creates a temporary folder for storing downloaded files.
-    Downloads and extracts:
-    Sysmon: From the official Sysinternals website.
-    Winlogbeat: From Elastic's official site.
-    Fetches sysmon-config.yml and winlogbeat.yml from the repository.
-    Configures and installs:
-    Sysmon: Using the downloaded configuration file.
-    Winlogbeat: As a Windows service.
-    Cleans up temporary files after installation.
 
 
-### **4. Verifications for sysmon and winlogbeat**
-
-    To check for sysmon : sc query sysmon64 
-
-    To check for winlogbeat : sc query winlogbeat
 
