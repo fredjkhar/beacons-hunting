@@ -4,22 +4,32 @@
 
     <br>
 
-    <p>Pick a start and end date to generate a report for a specific date/time range</p>
-    <p>Or leave blank to generate a report from the past 24 hours</p>
+    <div class="generator-container">
+      <!-- Content displayed when not loading -->
+      <div v-show="!loading">
+        <p>Pick a start and end date to generate a report for a specific date/time range</p>
+        <p>Or leave blank to generate a report from the past 24 hours</p>
 
-    <div class="date-time-box">
-      <div class="date-time">
-        <label>Start date</label>
-        <input type="datetime-local" v-model="startDate">
+        <div class="date-time-box">
+          <div class="date-time">
+            <label>Start date</label>
+            <input type="datetime-local" v-model="startDate" />
+          </div>
+
+          <div class="date-time">
+            <label>End date</label>
+            <input type="datetime-local" v-model="endDate" />
+          </div>
+        </div>
+
+        <button @click="generateReport()" :disabled="!isDateRangeValid()">Generate</button>
       </div>
 
-      <div class="date-time">
-        <label>End date</label>
-        <input type="datetime-local" v-model="endDate">
+      <!-- Loader displayed when loading -->
+      <div v-show="loading" class="loader-container">
+        <div class="spinner"></div>
       </div>
     </div>
-
-    <button @click="generateReport()">Generate</button>
   </div>
 </template>
 
@@ -36,7 +46,8 @@ export default {
     return {
       startDate: '', // Holds the start date
       endDate: '', // Holds the end date
-      restultData: [],
+      resultData: [],
+      loading: false,
     };
   },
   async mounted() {
@@ -48,8 +59,8 @@ export default {
     // Format dates to match the `datetime-local` input requirements
     this.endDate = this.formatDate(now);
     this.startDate = this.formatDate(yesterday);
-    console.log(this.startDate)
-    console.log(this.endDate)
+    // console.log(this.startDate)
+    // console.log(this.endDate)
   },
   methods: {
     // Formats a date to `YYYY-MM-DDTHH:mm` for `datetime-local`
@@ -61,34 +72,37 @@ export default {
       const minutes = String(date.getMinutes()).padStart(2, '0');
       return `${year}-${month}-${day}T${hours}:${minutes}`;
     },
-    async generateReport() {
-      // console.log("Generating report from", this.startDate, "to", this.endDate);
-
-      let backendData;
-      if (this.startDate == null || this.endDate == null) {
-        backendData = await fetchBackendData(
-          "http://backend:8080/api/get/"
-        );
-      }
-      else {
-        backendData = await fetchBackendDataWithDates(
-          "http://backend:8080/api/get/",
-          this.startDate,
-          this.endDate
-        );
-      }
-      this.data = backendData.map((item, index) => {
-        return {
-          id: index + 1, // Start IDs from 1
-          ...item,
-        };
-      });
-
-      // Store the data in localStorage
-      localStorage.setItem("tableData", JSON.stringify(this.data));
-
-      console.log(this.data)
+    isDateRangeValid() {
+      return new Date(this.startDate) <= new Date(this.endDate);
     },
+    async generateReport() {
+      this.loading = true;
+      try {
+          let backendData;
+          if (!this.startDate || !this.endDate) {
+              backendData = await fetchBackendData("http://backend:8080/api/get/");
+          } else {
+              backendData = await fetchBackendDataWithDates(
+                  "http://backend:8080/api/get/",
+                  this.startDate,
+                  this.endDate
+              );
+          }
+          this.resultData = backendData.map((item, index) => ({
+              id: index + 1,
+              ...item,
+          }));
+          localStorage.setItem("tableData", JSON.stringify(this.resultData));
+      } catch (error) {
+          console.error("Error fetching data:", error);
+          alert("Failed to generate report. Please try again.");
+      } finally {
+          this.loading = false;
+          if(this.resultData.length != 0) {
+            this.$router.push("/report");
+          }
+      }
+    }
   },
 };
 </script>
@@ -96,12 +110,8 @@ export default {
 <style>
 .content {
   display: flex;
-  /* Enable Flexbox layout */
   flex-direction: column;
-  /* Stack children vertically */
-  /* justify-content: center; Center vertically */
   align-items: center;
-  /* Center horizontally */
   text-align: center;
 }
 
@@ -109,11 +119,16 @@ h1 {
   margin-top: 0;
 }
 
+.generator-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
 .date-time-box {
   background-color: #f4f4f4;
   color: #333;
   padding: 20px;
-  width: 30vw;
   margin: 20px 0;
   border-radius: 10px;
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
@@ -125,50 +140,64 @@ button:hover {
   font-weight: bold;
 }
 
-/* General styling for datetime-local input */
 input[type="datetime-local"] {
   width: 100%;
-  /* Adjust width */
   padding: 10px;
-  /* Inner padding for better spacing */
   font-size: 16px;
-  /* Adjust font size */
   border: 2px solid #333;
-  /* Border color and thickness */
   border-radius: 5px;
-  /* Rounded corners */
   background-color: #f9f9f9;
-  /* Background color */
   color: #333;
-  /* Text color */
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  /* Optional: Shadow for better visuals */
   outline: none;
-  /* Remove the default blue border when focused */
 }
 
-/* Change appearance when focused */
 input[type="datetime-local"]:focus {
   border-color: #333;
   box-shadow: 0 0 5px rgba(4, 170, 109, 0.5);
-  /* Subtle glow effect */
 }
 
-/* Styling placeholder text (if present) */
-input[type="datetime-local"]::placeholder {
-  color: #999;
-  /* Lighter gray for placeholder */
-  font-style: italic;
-  /* Optional: Italic placeholder */
-}
-
-/* Disabled state */
 input[type="datetime-local"]:disabled {
   background-color: #e0e0e0;
-  /* Gray background for disabled input */
   color: #999;
-  /* Gray text color */
   cursor: not-allowed;
-  /* Change cursor to indicate non-interactivity */
+}
+
+.spinner {
+  width: 56px;
+  height: 56px;
+  display: grid;
+  border: 4.5px solid #0000;
+  border-radius: 50%;
+  border-right-color: #333333;
+  animation: spinner-a4dj62 1s infinite linear;
+}
+
+.spinner::before,
+.spinner::after {
+  content: "";
+  grid-area: 1/1;
+  margin: 2.2px;
+  border: inherit;
+  border-radius: 50%;
+  animation: spinner-a4dj62 2s infinite;
+}
+
+.spinner::after {
+  margin: 8.9px;
+  animation-duration: 3s;
+}
+
+@keyframes spinner-a4dj62 {
+  100% {
+    transform: rotate(1turn);
+  }
+}
+
+.loader-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%; /* Matches the height of the parent */
 }
 </style>
