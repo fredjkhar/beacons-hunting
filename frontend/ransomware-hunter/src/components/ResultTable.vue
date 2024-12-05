@@ -1,8 +1,8 @@
 <template>
   <div class="container">
     <h1>Beacon Scores</h1>
-    <div class="table-container">
-      <table v-if="data.length" class="result-table">
+    <div class="table-container" v-if="data.length">
+      <table  class="result-table">
         <thead>
           <tr>
             <th v-for="key in headers" :key="key" @click="handleSort(key)">
@@ -22,7 +22,11 @@
         </tbody>
       </table>
     </div>
-    <!-- <div v-else class="no-data">No data available.</div> -->
+    <div v-else class="no-data">
+        <p>No report has been generated, please go to generate page to fecth the desired data</p>
+        <br>
+        <button @click="toGeneratePage()">Go to Generate</button>
+    </div>
   </div>
 </template>
 
@@ -123,6 +127,9 @@ export default {
         return false;
       });
       return !isWhitelisted; // Return `false` to filter out the row
+    },
+    toGeneratePage() {
+      this.$router.push('/generate')
     }
   },
 };
@@ -195,5 +202,16 @@ header h1 {
 .result-table .clickable-row:hover {
   background-color: #e0f7fa;
   transition: background-color 0.3s ease;
+}
+
+.no-data {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 60vh; /* Full viewport height */
+  text-align: center;
+  font-size: large;
+  color: #333;
 }
 </style>
