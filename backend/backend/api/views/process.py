@@ -43,9 +43,9 @@ def process_data(df_original):
         .reset_index()
     )
 
-    # Corrected lambda function: parse string to datetime before formatting
+    # **Corrected Lambda Function: Parse Strings to datetime Objects**
     df["ConnectionTimes"] = df["ConnectionTimes"].apply(
-        lambda x: sorted([parse(t).strftime('%Y-%m-%dT%H:%M:%SZ') for t in x])
+        lambda x: sorted([parse(t) for t in x])
     )
 
     # Compute various scores based on ConnectionTimes
