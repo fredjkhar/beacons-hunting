@@ -7,6 +7,10 @@
         <div class="search-bar">
             <input type="text" v-model="whitelisted_item" placeholder="Add a program" />
         </div>
+        
+        <button @click="addToPrograms(whitelisted_item)">Add to Programs</button>
+        <button @click="addToDestinations(whitelisted_item)" style="margin-left: 1%; margin-right: 1%; margin-bottom: 1%;">Add to Destinations</button>
+        <button @click="addToSources(whitelisted_item)">Add to Senders</button>
 
         <div class="groups">
             <div class="whitelist-group whitelist-group-1">
@@ -17,9 +21,6 @@
                         <button class="remove-btn" @click="removeFromPrograms(index)">X</button>
                     </li>
                 </ul>
-                <div class="group-footer">
-                    <button @click="addToPrograms(whitelisted_item)">Add to Programs</button>
-                </div>
             </div>
             <div class="whitelist-group whitelist-group-2">
                 <h2>Whitelisted Destinations</h2>
@@ -29,9 +30,6 @@
                         <button class="remove-btn" @click="removeFromDestinations(index)">X</button>
                     </li>
                 </ul>
-                <div class="group-footer">
-                    <button @click="addToDestinations(whitelisted_item)">Add to Destinations</button>
-                </div>
             </div>
             <div class="whitelist-group whitelist-group-3">
                 <h2>Whitelisted Senders</h2>
@@ -41,9 +39,6 @@
                         <button class="remove-btn" @click="removeFromSources(index)">X</button>
                     </li>
                 </ul>
-                <div class="group-footer">
-                    <button @click="addToSources(whitelisted_item)">Add to Senders</button>
-                </div>
             </div>
         </div>
     </div>
@@ -130,6 +125,7 @@ body {
     padding: 20px;
 }
 
+/* search bar style */
 .search-bar {
     display: flex;
     justify-content: center;
@@ -162,7 +158,6 @@ body {
 /* Group styles */
 .whitelist-group {
     background-color: #f2f2f2;
-    ;
     color: #333;
     border-radius: 8px;
     padding: 20px;
@@ -186,7 +181,7 @@ ul li {
     justify-content: space-between;
     align-items: center;
     padding: 5px 10px;
-    border-bottom: 1px solid #eee;
+    border-bottom: 1px solid #a1a1a1;
     transition: background-color 0.2s;
 }
 
@@ -194,17 +189,12 @@ ul li:last-child {
     border-bottom: none;
 }
 
-/* Footer button styling */
-.group-footer {
-    text-align: center;
-}
-
 button {
     padding: 10px 20px;
     color: #fff;
     border: none;
-    border-radius: 4px;
-    font-size: medium;
+    border-radius: 4px !important;
+    font-size: small;
     cursor: pointer;
     transition: background-color 0.3s, transform 0.1s;
 }
@@ -215,5 +205,22 @@ button:hover {
 
 button:active {
     transform: scale(1);
+}
+
+/* Remove button styling */
+.remove-btn {
+    margin-left: auto; /* Push the button to the far right */
+    padding: 2px 6px;
+    background-color: #ff4d4d;
+    color: #fff;
+    border: none;
+    border-radius: 50%;
+    font-size: 12px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.remove-btn:hover {
+    background-color: #e60000;
 }
 </style>

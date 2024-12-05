@@ -1,13 +1,11 @@
 <template>
   <nav class="navbar">
-    <div class="project-name">Ransomeware Hunter</div>
+    <div class="project-name" @click="goHome">Ransomware Hunter</div>
     <div class="menu-items">
-      <div class="item" @click="changeTitle('Welcome to Ransomware Hunter')"><router-link to="/">Home</router-link>
-      </div>
-      <div class="item" @click="changeTitle('Generate Report')"><router-link to="/generate">Generate
-          Report</router-link></div>
-      <div class="item" @click="changeTitle('Beacon Scores')"><router-link to="/report">View Report</router-link></div>
-      <div class="item" @click="changeTitle('Whitelist')"><router-link to="/whitelist">Whitelist Items</router-link>
+      <div class="item"><router-link to="/">Home</router-link></div>
+      <div class="item"><router-link to="/generate">Generate Report</router-link></div>
+      <div class="item"><router-link to="/report">View Report</router-link></div>
+      <div class="item"><router-link to="/whitelist">Whitelist Items</router-link>
       </div>
     </div>
   </nav>
@@ -21,8 +19,8 @@ export default {
     }
   },
   methods: {
-    changeTitle(title) {
-      this.pageTitle = title;
+    goHome() {
+      this.$router.push("/")
     }
   },
 }

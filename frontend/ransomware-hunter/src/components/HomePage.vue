@@ -1,6 +1,6 @@
 <template>
     <div class="content">
-        <h1>Welcome to Ransomeware Hunter</h1>
+        <h1>Welcome to Ransomware Hunter</h1>
         <div class="welcome-box">
             <p>Description of product.</p>
             <p>Description of score calculation.</p>
@@ -52,14 +52,14 @@ export default {
 }
 
 button {
-    background-color: #333;
+    background-color: #38678F;
     color: #f2f2f2;
     font-weight: bold;
     font-size: x-large;
 }
 
 button:hover {
-    background-color: #333;
+    background-color: #38678F;
     color: #f2f2f2;
     font-weight: bold;
 }

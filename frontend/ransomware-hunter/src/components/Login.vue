@@ -73,14 +73,14 @@
     padding: 10px 20px;
     font-size: 1rem;
     color: white;
-    background-color: #007bff;
+    background-color: #38678F;
     border: none;
     border-radius: 5px;
     cursor: pointer;
   }
   
   .login-layout button:hover {
-    background-color: #0056b3;
+    background-color: #38678F;
   }
   
   .error-message {
