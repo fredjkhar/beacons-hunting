@@ -67,12 +67,12 @@ export default {
       let backendData;
       if (this.startDate == null || this.endDate == null) {
         backendData = await fetchBackendData(
-          "http://backend:8000/api/get/"
+          "http://backend:8080/api/get/"
         );
       }
       else {
         backendData = await fetchBackendDataWithDates(
-          "http://backend:8000/api/get/",
+          "http://backend:8080/api/get/",
           this.startDate,
           this.endDate
         );
