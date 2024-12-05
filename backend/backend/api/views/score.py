@@ -7,7 +7,7 @@ def compute_bowleys_skewness(connection_times):
     diffs = diffs[diffs > 1]
 
     if len(diffs) < 6:
-        return None
+        return 0
 
     Q1, Q2, Q3 = np.percentile(diffs, [25, 50, 75])
     bowleys_numerator = Q1 + Q3 - 2 * Q2
@@ -26,7 +26,7 @@ def compute_mad_score(connection_times):
     diffs = diffs[diffs > 1]
 
     if len(diffs) < 6:
-        return None
+        return 0.0
 
     tsMid = np.percentile(diffs, 50)
     tsMadm = np.median(np.abs(diffs - tsMid))
@@ -35,7 +35,7 @@ def compute_mad_score(connection_times):
 
 def compute_connection_count_score(connection_times):
     if len(connection_times) < 6:
-        return None
+        return 0.0
 
     connection_times.sort()
     time_span_seconds = (connection_times[-1] - connection_times[0]).total_seconds()
