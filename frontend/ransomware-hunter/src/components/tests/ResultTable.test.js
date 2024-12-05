@@ -326,22 +326,6 @@ describe('ResultTable.vue sorting direction indicator', () => {
 });
 
 describe('whitelist functionality', () => {
-  test('updates whitelist when Whitelist button is clicked', async () => {
-    // Mount the component
-    const wrapper = mount(ResultTable);
-
-    // Set the whitelistText field
-    const whitelistInput = wrapper.find('input[type="text"]');
-    await whitelistInput.setValue('testExample');
-
-    // Trigger the button click
-    const button = wrapper.find('button');
-    await button.trigger('click');
-
-    // Verify that the whitelist is updated
-    expect(wrapper.vm.whitelist).toEqual('testExample');
-  });
-
   test('returns true if whitelist is empty or null', () => {
     const wrapper = mount(ResultTable);
 

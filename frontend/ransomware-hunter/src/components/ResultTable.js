@@ -6,8 +6,8 @@ export async function fetchBackendData(endpoint = "/api/get/") {
       if (!response.ok) {
         throw new Error("Failed to fetch data from the backend");
       }
-      const data = await response.json();
-      return data;
+      const resultData = await response.json();
+      return resultData;
     } catch (error) {
       console.error(error.message);
       return []; // Return an empty array on error
@@ -32,17 +32,17 @@ export async function fetchBackendData(endpoint = "/api/get/") {
       if (!response.ok) {
         throw new Error("Failed to fetch data from the backend");
       }
-      const data = await response.json();
-      return data;
+      const resultData = await response.json();
+      return resultData;
     } catch (error) {
       console.error(error.message);
       return []; // Return an empty array on error
     }
   }
   
-  export function getSortedTableData(data, sortKey, sortAsc) {
-    if (!sortKey) return data;
-    return [...data].sort((a, b) => {
+  export function getSortedTableData(resultData, sortKey, sortAsc) {
+    if (!sortKey) return resultData;
+    return [...resultData].sort((a, b) => {
       let valueA = a[sortKey];
       let valueB = b[sortKey];
   
