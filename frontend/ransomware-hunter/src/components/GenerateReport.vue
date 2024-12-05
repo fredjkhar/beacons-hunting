@@ -60,12 +60,12 @@
                 let backendData;
                 if(this.startDate == null || this.endDate == null){
                     backendData = await fetchBackendData(
-                        "/api/get/"
+                        "http://34.67.212.1:8080/api/"
                     );
                 }
                 else{
                     backendData = await fetchBackendDataWithDates(
-                        "/api/get/",
+                        "http://34.67.212.1:8080/api/",
                         this.startDate,
                         this.endDate
                     );
