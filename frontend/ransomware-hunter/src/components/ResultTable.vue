@@ -1,22 +1,8 @@
-<!-- ResultTable.vue -->
-
 <template>
   <div class="container">
-    <header>
-      <h1>Beacon Scores</h1>
-    </header>
-
-    <div class="whitelist mb-2">
-      <input
-        type="text"
-        v-model="whitelistText"
-        placeholder="Enter whitelist text"
-      />
-      <button @click="submitWhitelist">Whitelist</button>
-    </div>
-    
-    <div>
-      <table v-if="data.length" class="result_table">
+    <h1>Beacon Scores</h1>
+    <div class="table-container" v-if="data.length">
+      <table  class="result-table">
         <thead>
           <tr>
             <th v-for="key in headers" :key="key" @click="handleSort(key)">
@@ -28,18 +14,18 @@
           </tr>
         </thead>
         <tbody>
-          <tr
-            v-for="row in sortedData"
-            :key="row.id"
-            @click="rowClicked(row)"
-            
-          >
+          <tr v-for="row in sortedData" :key="row.id" @click="rowClicked(row)" class="clickable-row">
             <td v-for="key in headers" :key="key" :data-label="key" v-if="whitelistedRowTest(row)">
               {{ row[key] }}
             </td>
           </tr>
         </tbody>
       </table>
+    </div>
+    <div v-else class="no-data">
+        <p>No report has been generated, please go to generate page to fecth the desired data</p>
+        <br>
+        <button @click="toGeneratePage()">Go to Generate</button>
     </div>
   </div>
 </template>
@@ -68,21 +54,20 @@ export default {
   },
   async mounted() {
     this.isLoading = true;
-    
-    if(localStorage.getItem("whitelisted_programs") != null){
-        this.whitelisted_programs = JSON.parse(localStorage.getItem("whitelisted_programs"));
+
+    if (localStorage.getItem("whitelisted_programs") != null) {
+      this.whitelisted_programs = JSON.parse(localStorage.getItem("whitelisted_programs"));
     }
-    if(localStorage.getItem("whitelisted_destinations") != null){
-        this.whitelisted_destinations = JSON.parse(localStorage.getItem("whitelisted_destinations"));
+    if (localStorage.getItem("whitelisted_destinations") != null) {
+      this.whitelisted_destinations = JSON.parse(localStorage.getItem("whitelisted_destinations"));
     }
-    if(localStorage.getItem("whitelisted_sources") != null){
-        this.whitelisted_sources = JSON.parse(localStorage.getItem("whitelisted_sources"));
+    if (localStorage.getItem("whitelisted_sources") != null) {
+      this.whitelisted_sources = JSON.parse(localStorage.getItem("whitelisted_sources"));
     }
 
-    if(localStorage.getItem("tableData") != null){
+    if (localStorage.getItem("tableData") != null) {
       this.data = JSON.parse(localStorage.getItem("tableData"));
     }
-    
   },
   computed: {
     headers() {
@@ -127,7 +112,6 @@ export default {
         return false;
       });
     },
-    
     whitelistedRowTest(row) {
       const rowArray = Object.entries(row);
 
@@ -143,7 +127,91 @@ export default {
         return false;
       });
       return !isWhitelisted; // Return `false` to filter out the row
+    },
+    toGeneratePage() {
+      this.$router.push('/generate')
     }
   },
 };
 </script>
+
+<style scoped>
+/* Header Styling */
+header h1 {
+  font-size: 2rem;
+  color: #333;
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+/* Table Container */
+.table-container {
+  overflow-x: auto;
+  /* Enables horizontal scrolling if needed */
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  background-color: #fefefe;
+  width: 90vw;
+  /* Adjust this if a different percentage is preferred */
+  margin: 0 auto;
+  /* Center the container */
+  max-width: 100%;
+  /* Ensure it doesn't exceed the viewport width */
+  display: flex;
+  justify-content: center;
+  /* Center the content within the container */
+}
+
+/* Table Styling */
+.result-table {
+  width: 100%;
+  /* Ensures the table stretches to fit the container */
+  border-collapse: collapse;
+  /* Prevents double borders */
+  table-layout: auto;
+  /* Allows columns to resize naturally */
+}
+
+.result-table thead {
+  background-color: #333;
+  color: white;
+}
+
+.result-table th,
+.result-table td {
+  padding: 8px 10px;
+  text-align: left;
+  border-bottom: 1px solid #ddd;
+  white-space: nowrap;
+  /* Prevents text wrapping, can remove if wrapping is fine */
+}
+
+.result-table th:hover {
+  background-color: #ddd;
+  color: black;
+}
+
+.result-table tbody tr:nth-child(even) {
+  background-color: #f9f9f9;
+}
+
+.result-table tbody tr:hover {
+  background-color: #f1f8ff;
+}
+
+.result-table .clickable-row:hover {
+  background-color: #e0f7fa;
+  transition: background-color 0.3s ease;
+}
+
+.no-data {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 60vh; /* Full viewport height */
+  text-align: center;
+  font-size: large;
+  color: #333;
+}
+</style>

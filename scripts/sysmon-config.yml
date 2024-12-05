@@ -1,3 +1,4 @@
+<<<<<<< Updated upstream
 <Sysmon schemaversion="4.70">
   <!-- Event filtering -->
   <EventFiltering>
@@ -55,3 +56,62 @@
     <ProcessTampering onmatch="include" />
   </EventFiltering>
 </Sysmon>
+=======
+<Sysmon schemaversion="4.70">
+  <!-- Event filtering -->
+  <EventFiltering>
+    <!-- Process Creation -->
+    <ProcessCreate onmatch="include">
+      <!-- Include all process creations -->
+      <Rule groupRelation="or">
+        <Image condition="is">C:\Windows\System32\cmd.exe</Image>
+        <Image condition="is">C:\Windows\System32\powershell.exe</Image>
+        <Image condition="end with">.exe</Image>
+      </Rule>
+    </ProcessCreate>
+
+    <!-- Network Connections -->
+    <NetworkConnect onmatch="exclude">
+      <Rule groupRelation="or">
+        <!-- Exclude common system services -->
+        <DestinationPort condition="is">53</DestinationPort>
+        <DestinationPort condition="is">443</DestinationPort>
+        <DestinationPort condition="is">80</DestinationPort>
+      </Rule>
+    </NetworkConnect>
+
+    <!-- File Creation -->
+    <FileCreate onmatch="include">
+      <!-- Monitor all EXE and DLL file creation -->
+      <TargetFilename condition="end with">.exe</TargetFilename>
+      <TargetFilename condition="end with">.dll</TargetFilename>
+    </FileCreate>
+
+    <!-- Registry Events -->
+    <RegistryEvent onmatch="include">
+      <Rule groupRelation="or">
+        <!-- Monitor changes to Run and RunOnce keys -->
+        <TargetObject condition="begin with">HKLM\Software\Microsoft\Windows\CurrentVersion\Run</TargetObject>
+        <TargetObject condition="begin with">HKLM\Software\Microsoft\Windows\CurrentVersion\RunOnce</TargetObject>
+      </Rule>
+    </RegistryEvent>
+
+    <!-- Image Loading -->
+    <ImageLoad onmatch="include">
+      <Rule groupRelation="or">
+        <ImageLoaded condition="end with">.dll</ImageLoaded>
+      </Rule>
+    </ImageLoad>
+
+    <!-- Other Sysmon Rules -->
+    <CreateRemoteThread onmatch="include" />
+    <RawAccessRead onmatch="exclude" />
+    <FileCreateTime onmatch="exclude" />
+    <FileDelete onmatch="include">
+      <TargetFilename condition="end with">.log</TargetFilename>
+    </FileDelete>
+    <ClipboardChange onmatch="include" />
+    <ProcessTampering onmatch="include" />
+  </EventFiltering>
+</Sysmon>
+>>>>>>> Stashed changes

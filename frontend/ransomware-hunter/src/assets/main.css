@@ -1,81 +1,10 @@
-/* main.css */
+main.css
 
-/* Import base styles */
-@import './base.css';
-
-/* Main app container */
-#app {
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 20px;
-}
-
-/* Header */
-header {
-  background-color: var(--color-surface);
-  padding: 20px;
-  border-bottom: 1px solid var(--color-border);
-  margin-bottom: 20px;
-}
-
-header h1 {
-  margin: 0;
-}
-
-/* Whitelist input and button */
-.whitelist {
-  display: flex;
-  gap: 10px;
-  margin-bottom: 20px;
-}
-
-.whitelist input[type="text"] {
-  flex: 1;
-}
-
-.whitelist button {
-  flex-shrink: 0;
-}
-
-/* Table Styles */
-.result_table {
-  width: 100%;
-  border-collapse: collapse;
-  background-color: var(--color-surface);
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-}
-
-.result_table thead {
-  background-color: var(--color-primary);
-  color: #ffffff;
-}
-
-.result_table th,
-.result_table td {
-  padding: 12px 15px;
-  text-align: left;
-  border-bottom: 1px solid var(--color-border);
-}
-
-.result_table th {
-  cursor: pointer;
-  user-select: none;
-}
-
-.result_table th:hover {
-  background-color: var(--color-secondary);
-}
-
-.result_table tr:nth-child(even) {
-  background-color: var(--color-background);
-}
-
-.result_table th span {
-  margin-left: 5px;
-  font-size: 0.9em;
-}
-
-.result_table tbody tr:hover {
-  background-color: var(--color-background); 
-  cursor: pointer; 
+:root {
+    --primary-color: #333;
+    --secondary-color: #f2f2f2;
+    --hover-color: #ddd;
+    --background-color: #f5f5f5;
+    --text-color-dark: #333;
+    --text-color-light: #f2f2f2;
 }
