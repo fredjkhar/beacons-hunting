@@ -1,9 +1,16 @@
 <template>
   <div id="app" class="magicpattern">
-    <Navbar />
-    <main class="content">
-      <router-view></router-view>
-    </main>
+    <div v-if="isLoggedIn">
+      <Navbar />
+      <main class="content">
+        <router-view></router-view>
+      </main>
+    </div>
+
+    <div v-else>
+      <Login @loginSuccess="handleLoginSuccess" />
+    </div>
+
     <footer>
       <p>Designed by <strong>2024 UOttawa Capstone Group 18</strong></p>
     </footer>
@@ -11,11 +18,24 @@
 </template>
 
 <script>
-import Navbar from './components/Navbar.vue'; // Adjust the path based on your project structure
+import Navbar from './components/Navbar.vue';
+import Login from './components/Login.vue';
 
 export default {
   components: {
     Navbar,
+    Login,
+  },
+  data() {
+    return {
+      isLoggedIn: sessionStorage.getItem("isLoggedIn") === "true",
+    };
+  },
+  methods: {
+    handleLoginSuccess() {
+      this.isLoggedIn = true;
+      sessionStorage.setItem("isLoggedIn", "true");
+    },
   },
 };
 </script>
