@@ -1,6 +1,6 @@
 from django.urls import path
-from .views import my_view
+from .views import views
 
 urlpatterns = [
-    path('api/get/', my_view, name='get_data'),
+    path('get/', views.my_view),
 ]
