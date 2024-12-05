@@ -24,5 +24,5 @@ while true; do
     fi
 
     # Wait for 5 minutes before checking again
-    sleep 300
+    sleep 100
 done
