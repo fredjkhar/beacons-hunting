@@ -31,7 +31,7 @@ def process_data(df_original):
     df = df[target_columns]
 
     # Drop rows with missing (NaN) values
-    df = df.dropna()
+    #df = df.dropna()
 
     # Group by source and destination IPs and aggregate connection data
     df = (
@@ -56,6 +56,7 @@ def process_data(df_original):
     # Drop any remaining rows with NaN values after scoring
     df.dropna(inplace=True)
 
+    print(len(df))
     # Compute the combined score
     df["Score"] = df.apply(compute_combined_score, axis=1)
 
