@@ -152,7 +152,7 @@ body {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
     gap: 20px;
-    height: 60vh;
+    height: 55vh;
 }
 
 /* Group styles */

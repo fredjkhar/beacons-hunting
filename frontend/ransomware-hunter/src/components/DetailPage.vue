@@ -19,10 +19,10 @@
           </div>
         </div>
 
-        <br /> 
+        <br />
         <button v-if="!sourceWhitelisted" @click="addSourceToWhitelist" style="font-size: medium;">Add source to Whitelist</button>
         <p v-if="sourceWhitelisted"><strong>Source has been whitelisted</strong></p>
-        <br v-if="!sourceWhitelisted"/><br v-if="!destinationWhitelisted"/>
+        <br v-if="!sourceWhitelisted"/><br />
         <button v-if="!destinationWhitelisted" @click="addDestinationToWhitelist" style="font-size: medium;">Add destination to Whitelist</button>
         <p v-if="destinationWhitelisted"><strong>Destination has been whitelisted</strong></p>
       </div>
@@ -32,8 +32,7 @@
       </div>
     </div>
   </div>
-  
-  <br />
+  <br>
   <button @click="goBack">Back to Table</button>
 </template>
 
@@ -73,6 +72,32 @@ export default {
   },
   created() {
     this.fetchRowData();
+    // if (this.rowData == null) {
+    //   this.rowData = {
+    //     "source.ip": "0:0:0:0:0:0:0:1",
+    //     "destination.ip": "0:0:0:0:0:0:0:1",
+    //     TotalConnections: 25,
+    //     ConnectionTimes: [
+    //       "2024-11-15T00:00:00.000Z",
+    //       "2024-11-15T01:00:00.000Z",
+    //       "2024-11-15T01:00:00.000Z",
+    //       "2024-11-15T01:00:00.000Z",
+    //       "2024-11-15T02:00:00.000Z",
+    //       "2024-11-15T02:00:00.000Z",
+    //       "2024-11-15T04:00:00.000Z",
+    //       "2024-11-15T04:00:00.000Z",
+    //       "2024-11-15T06:00:00.000Z",
+    //       "2024-11-15T06:00:00.000Z",
+    //       "2024-11-16T04:00:00.000Z",
+    //       "2024-11-16T06:00:00.000Z",
+    //       "2024-11-16T06:00:00.000Z",
+    //     ],
+    //     "Skew score": 1,
+    //     "MAD score": 1,
+    //     "Count score": 1,
+    //     Score: 1,
+    //   };
+    // }
   },
   methods: {
     fetchRowData() {
@@ -123,11 +148,13 @@ export default {
   flex-direction: row;
   gap: 2rem;
   align-items: flex-start;
+
 }
 
 .details-section {
   padding: 20px;
   flex: 1;
+  /* Takes up 1 part of the space */
   min-width: 0;
   text-align: left;
   background-color: #f2f2f2;
@@ -137,10 +164,21 @@ export default {
 
 .graph-section {
   padding: 20px;
-  flex: 1;
+  flex: 2;
+  /* Takes up 2 parts of the space */
   min-width: 0;
   background-color: #f2f2f2;
   border-radius: 10px;
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+}
+
+.details-section ul {
+  padding: 0;
+  margin: 0;
+}
+
+.details-section li {
+  margin: 0;
+  padding: 0;
 }
 </style>

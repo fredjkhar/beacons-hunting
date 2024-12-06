@@ -1,6 +1,6 @@
 <template>
     <div class="content">
-        <h1>Welcome to Ransomware Hunter</h1>
+        <h1>Welcome to Beacon Hunter</h1>
         <div class="welcome-box">
             <p>	Beacon hunting involves identifying and analyzing communication signals between compromised systems and threat actors to detect malicious activity. The generated reports help in identifying these systems.</p>
             <p id="click-text">Click the get started button to start generating a report.</p>
