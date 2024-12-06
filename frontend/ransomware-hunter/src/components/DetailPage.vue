@@ -31,6 +31,7 @@
     </div>
   </div>
   
+  <br />
   <button @click="goBack">Back to Table</button>
 </template>
 
