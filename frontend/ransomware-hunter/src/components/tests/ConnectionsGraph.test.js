@@ -56,9 +56,8 @@ describe('ConnectionsGraph.vue', () => {
 
   beforeEach(() => {
     wrapper = mount(ConnectionsGraph, {
-      props: {
-        rowData: [
-          {
+        props: {
+          rowData: {
             ConnectionTimes: [
               '2024-11-15T00:00:00.000Z',
               '2024-11-15T01:00:00.000Z',
@@ -66,9 +65,8 @@ describe('ConnectionsGraph.vue', () => {
               '2024-11-16T00:00:00.000Z',
             ],
           },
-        ],
-      },
-    });
+        },
+      });
   });
 
   test('renders the component with initial structure', async () => {
