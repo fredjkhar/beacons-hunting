@@ -54,7 +54,7 @@ export default {
       };
 
       // Convert to Date objects
-      this.data = dummyData.ConnectionTimes.map((d) => new Date(d));
+      this.data = this.rowData.ConnectionTimes.map((d) => new Date(d));
 
       // Group data by day
       this.dataDay = Array.from(
