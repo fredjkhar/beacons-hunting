@@ -1,6 +1,6 @@
 <template>
   <div class="container">
-    <h1>Beacon Scores</h1>
+    <h1>Beacon Scores Table</h1>
     <div class="table-container" v-if="data.length">
       <table  class="result-table">
         <thead>
@@ -43,8 +43,8 @@ export default {
       whitelistText: "",
       whitelist: null,
       data: [],
-      sortKey: null,
-      sortAsc: true,
+      sortKey: "Score",
+      sortAsc: false,
       isLoading: false,
       error: null,
       whitelisted_programs: [],

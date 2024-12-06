@@ -2,9 +2,8 @@
     <div class="content">
         <h1>Welcome to Ransomware Hunter</h1>
         <div class="welcome-box">
-            <p>Description of product.</p>
-            <p>Description of score calculation.</p>
-            <p>Click the get started button to start generating a report.</p>
+            <p>	Beacon hunting involves identifying and analyzing communication signals between compromised systems and threat actors to detect malicious activity. The generated reports help in identifying these systems.</p>
+            <p id="click-text">Click the get started button to start generating a report.</p>
         </div>
 
         <button @click="getStartedButton">Get Started</button>
@@ -39,7 +38,6 @@ export default {
     ;
     color: #333;
     width: 75vw;
-    height: 55vh;
     margin-top: 5vh;
     margin-bottom: 5vh;
     padding: 20px;
@@ -49,6 +47,10 @@ export default {
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
     /* Optional: Add shadow for better visuals */
     font-size: x-large;
+}
+
+#click-text {
+    color: #38678F;
 }
 
 button {

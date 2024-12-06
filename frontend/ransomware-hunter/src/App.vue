@@ -12,7 +12,8 @@
     </div>
 
     <footer>
-      <p>Designed by <strong>2024 UOttawa Capstone Group 18</strong></p>
+      <p>Developed by <strong>2024 UOttawa Capstone Group 18</strong></p>
+      <p>Link to GitHub repository: <a id="repo-link" target="_blank" href="https://github.com/fredjkhar/beacons-hunting"><strong>threat-hunting</strong></a></p>
     </footer>
   </div>
 </template>
@@ -99,6 +100,10 @@ footer {
 /* Footer link highlight */
 footer strong {
   color: #f2f2f2;
+}
+
+#repo-link {
+  color: white;
 }
 
 /* Responsive adjustments */
