@@ -3,7 +3,7 @@
       <nav>
         <div
           style="background-color: #333; color: #f2f2f2; padding: 14px 16px; font-weight: bold; text-decoration: none; font-size: 30px; text-align: center;">
-          <h1>Ransomware Hunter</h1>
+          <h1>Beacon Hunter</h1>
         </div>
       </nav>
       <div class="login-layout">
