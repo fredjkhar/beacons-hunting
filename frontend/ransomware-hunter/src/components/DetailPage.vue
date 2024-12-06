@@ -2,8 +2,10 @@
   <div class="container">
     <h1>Beacon Score</h1>
     <div v-if="rowData" class="content-wrapper">
+      <!-- Display details of the selected row data -->
       <div class="details-section">
         <div v-for="(value, key) in rowData" :key="key" class="mb-1">
+          <!-- Check if the key is 'ConnectionTimes' and show it as a collapsible section -->
           <div v-if="key == 'ConnectionTimes'">
             <details>
               <summary>
@@ -14,51 +16,54 @@
               </ul>
             </details>
           </div>
+          <!-- Display other key-value pairs directly -->
           <div v-else>
             <strong>{{ key }}:</strong> {{ value }}
           </div>
         </div>
 
         <br />
+        <!-- Display button to add source to whitelist if it's not already whitelisted -->
         <button id="whitelistButtonSource" v-if="!sourceWhitelisted" @click="addSourceToWhitelist" style="font-size: medium;">Add source to Whitelist</button>
+        <!-- Display message if source is already whitelisted -->
         <p v-if="sourceWhitelisted"><strong>Source has been whitelisted</strong></p>
         <br v-if="!sourceWhitelisted"/><br />
+        
+        <!-- Display button to add destination to whitelist if it's not already whitelisted -->
         <button id="whitelistButtonDestination" v-if="!destinationWhitelisted" @click="addDestinationToWhitelist" style="font-size: medium;">Add destination to Whitelist</button>
+        <!-- Display message if destination is already whitelisted -->
         <p v-if="destinationWhitelisted"><strong>Destination has been whitelisted</strong></p>
       </div>
 
+      <!-- Display the connections graph component -->
       <div class="graph-section">
         <connections-graph :rowData="rowData" />
       </div>
     </div>
   </div>
   <br>
+  <!-- Button to go back to the previous report view -->
   <button id="backButton" @click="goBack">Back to Table</button>
 </template>
 
-
 <script>
-import ConnectionsGraph from "./ConnectionsGraph.vue";
+import ConnectionsGraph from "./ConnectionsGraph.vue"; // Importing the ConnectionsGraph component
+
 export default {
-  components: { ConnectionsGraph },
-  props: ["id"],
+  components: { ConnectionsGraph }, // Registering ConnectionsGraph component
+  props: ["id"], // Accepting 'id' as a prop to fetch the specific row data
   data() {
     return {
-      rowData: null,
-      whitelisted_programs: [],
-      whitelisted_sources: [],
-      whitelisted_destinations: [],
-      sourceWhitelisted: false,
-      destinationWhitelisted: false,
+      rowData: null, // Holds the data for the current row
+      whitelisted_programs: [], // List of whitelisted programs (not used in this component)
+      whitelisted_sources: [], // List of whitelisted sources
+      whitelisted_destinations: [], // List of whitelisted destinations
+      sourceWhitelisted: false, // Flag to track if source has been whitelisted
+      destinationWhitelisted: false, // Flag to track if destination has been whitelisted
     };
   },
   mounted() {
-    // this.programs = this.rowData[8].split(" | ");
-    // if (localStorage.getItem("whitelisted_programs") != null) {
-    //   this.whitelisted_programs = JSON.parse(
-    //     localStorage.getItem("whitelisted_programs")
-    //   );
-    // }
+    // Initialize localStorage values for whitelisted sources and destinations
     if (localStorage.getItem("whitelisted_destinations") != null) {
       this.whitelisted_destinations = JSON.parse(
         localStorage.getItem("whitelisted_destinations")
@@ -71,44 +76,23 @@ export default {
     }
   },
   created() {
+    // Fetch the row data for the given id
     this.fetchRowData();
-    // if (this.rowData == null) {
-    //   this.rowData = {
-    //     "source.ip": "0:0:0:0:0:0:0:1",
-    //     "destination.ip": "0:0:0:0:0:0:0:1",
-    //     TotalConnections: 25,
-    //     ConnectionTimes: [
-    //       "2024-11-15T00:00:00.000Z",
-    //       "2024-11-15T01:00:00.000Z",
-    //       "2024-11-15T01:00:00.000Z",
-    //       "2024-11-15T01:00:00.000Z",
-    //       "2024-11-15T02:00:00.000Z",
-    //       "2024-11-15T02:00:00.000Z",
-    //       "2024-11-15T04:00:00.000Z",
-    //       "2024-11-15T04:00:00.000Z",
-    //       "2024-11-15T06:00:00.000Z",
-    //       "2024-11-15T06:00:00.000Z",
-    //       "2024-11-16T04:00:00.000Z",
-    //       "2024-11-16T06:00:00.000Z",
-    //       "2024-11-16T06:00:00.000Z",
-    //     ],
-    //     "Skew score": 1,
-    //     "MAD score": 1,
-    //     "Count score": 1,
-    //     Score: 1,
-    //   };
-    // }
   },
   methods: {
+    // Fetch data for the row with the given 'id' from localStorage
     fetchRowData() {
       const allData = JSON.parse(localStorage.getItem("tableData")) || [];
       this.rowData = allData.find((row) => row.id === parseInt(this.id));
     },
+
+    // Method to navigate back to the previous report page
     goBack() {
       this.$router.push("/report");
     },
 
     // Whitelist functions
+    // Add the source to the whitelist and save to localStorage
     addSourceToWhitelist() {
       if (!this.whitelisted_sources.includes(this.rowData["source.ip"])) {
         this.whitelisted_sources.push(this.rowData["source.ip"]);
@@ -119,6 +103,8 @@ export default {
       }
       this.sourceWhitelisted = true;
     },
+
+    // Add the destination to the whitelist and save to localStorage
     addDestinationToWhitelist() {
       if (
         !this.whitelisted_destinations.includes(this.rowData["destination.ip"])
@@ -136,6 +122,7 @@ export default {
 </script>
 
 <style scoped>
+/* Container for the entire page */
 .container {
   display: flex;
   flex-direction: column;
@@ -143,18 +130,18 @@ export default {
   overflow: hidden;
 }
 
+/* Wrapper for the content section */
 .content-wrapper {
   display: flex;
   flex-direction: row;
   gap: 2rem;
   align-items: flex-start;
-
 }
 
+/* Section for displaying the details of the row data */
 .details-section {
   padding: 20px;
-  flex: 1;
-  /* Takes up 1 part of the space */
+  flex: 1; /* Takes up 1 part of the space */
   min-width: 0;
   text-align: left;
   background-color: #f2f2f2;
@@ -162,21 +149,23 @@ export default {
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
 }
 
+/* Section for displaying the connections graph */
 .graph-section {
   padding: 20px;
-  flex: 2;
-  /* Takes up 2 parts of the space */
+  flex: 2; /* Takes up 2 parts of the space */
   min-width: 0;
   background-color: #f2f2f2;
   border-radius: 10px;
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
 }
 
+/* Styling for the lists in the details section */
 .details-section ul {
   padding: 0;
   margin: 0;
 }
 
+/* Styling for each list item in the details section */
 .details-section li {
   margin: 0;
   padding: 0;

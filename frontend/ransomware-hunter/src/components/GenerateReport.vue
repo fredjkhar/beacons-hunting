@@ -1,5 +1,6 @@
 <template>
   <div class="content">
+    <!-- Page heading -->
     <h1>Generate Report</h1>
 
     <br>
@@ -11,21 +12,24 @@
         <p>Or leave blank to generate a report from the past 24 hours</p>
 
         <div class="date-time-box">
+          <!-- Start date input field -->
           <div class="date-time">
             <label>Start date</label>
             <input type="datetime-local" v-model="startDate" />
           </div>
 
+          <!-- End date input field -->
           <div class="date-time">
             <label>End date</label>
             <input type="datetime-local" v-model="endDate" />
           </div>
         </div>
 
+        <!-- Button to trigger report generation, disabled if date range is invalid -->
         <button @click="generateReport()" :disabled="!isDateRangeValid()">Generate</button>
       </div>
 
-      <!-- Loader displayed when loading -->
+      <!-- Loader displayed while loading -->
       <div v-show="loading" class="loader-container">
         <div class="spinner"></div>
       </div>
@@ -34,6 +38,7 @@
 </template>
 
 <script>
+// Importing utility functions for handling backend data and sorting
 import {
   fetchBackendData,
   fetchBackendDataWithDates,
@@ -44,26 +49,24 @@ import {
 export default {
   data() {
     return {
-      startDate: '', // Holds the start date
-      endDate: '', // Holds the end date
-      resultData: [],
-      loading: false,
+      startDate: '', // Holds the start date selected by the user
+      endDate: '', // Holds the end date selected by the user
+      resultData: [], // Holds the report data to be displayed
+      loading: false, // Indicates whether the report is being generated
     };
   },
   async mounted() {
-    // Set the default dates
+    // Set the default dates to the last 24 hours
     const now = new Date();
     const yesterday = new Date(now);
     yesterday.setDate(now.getDate() - 1);
 
-    // Format dates to match the `datetime-local` input requirements
+    // Format the dates to match the `datetime-local` input format
     this.endDate = this.formatDate(now);
     this.startDate = this.formatDate(yesterday);
-    // console.log(this.startDate)
-    // console.log(this.endDate)
   },
   methods: {
-    // Formats a date to `YYYY-MM-DDTHH:mm` for `datetime-local`
+    // Helper method to format date objects to `YYYY-MM-DDTHH:mm` for `datetime-local`
     formatDate(date) {
       const year = date.getFullYear();
       const month = String(date.getMonth() + 1).padStart(2, '0');
@@ -72,35 +75,41 @@ export default {
       const minutes = String(date.getMinutes()).padStart(2, '0');
       return `${year}-${month}-${day}T${hours}:${minutes}`;
     },
+    // Checks if the start date is before or equal to the end date
     isDateRangeValid() {
       return new Date(this.startDate) <= new Date(this.endDate);
     },
+    // Generates the report by fetching data from the backend
     async generateReport() {
-      this.loading = true;
+      this.loading = true; // Set loading state to true
       try {
-          let backendData;
-          if (!this.startDate || !this.endDate) {
-              backendData = await fetchBackendData("http://34.67.212.1:8000/api/get/");
-          } else {
-              backendData = await fetchBackendDataWithDates(
-                  "http://34.67.212.1:8000/api/get/",
-                  this.startDate,
-                  this.endDate
-              );
-          }
-          this.resultData = backendData.map((item, index) => ({
-              id: index + 1,
-              ...item,
-          }));
-          localStorage.setItem("tableData", JSON.stringify(this.resultData));
+        let backendData;
+        // Fetch data from backend based on the selected date range
+        if (!this.startDate || !this.endDate) {
+          backendData = await fetchBackendData("http://34.67.212.1:8000/api/get/");
+        } else {
+          backendData = await fetchBackendDataWithDates(
+            "http://34.67.212.1:8000/api/get/",
+            this.startDate,
+            this.endDate
+          );
+        }
+        // Map the backend data to include an `id` for each item
+        this.resultData = backendData.map((item, index) => ({
+          id: index + 1,
+          ...item,
+        }));
+        // Store the result data in local storage for persistence
+        localStorage.setItem("tableData", JSON.stringify(this.resultData));
       } catch (error) {
-          console.error("Error fetching data:", error);
-          alert("Failed to generate report. Please try again.");
+        console.error("Error fetching data:", error);
+        alert("Failed to generate report. Please try again.");
       } finally {
-          this.loading = false;
-          if(this.resultData.length != 0) {
-            this.$router.push("/report");
-          }
+        this.loading = false; // Set loading state to false after fetching
+        // Navigate to the report page if data was successfully fetched
+        if(this.resultData.length != 0) {
+          this.$router.push("/report");
+        }
       }
     }
   },
@@ -108,6 +117,7 @@ export default {
 </script>
 
 <style>
+/* Styling for the content container */
 .content {
   display: flex;
   flex-direction: column;
@@ -115,16 +125,19 @@ export default {
   text-align: center;
 }
 
+/* Styling for the page heading */
 h1 {
   margin-top: 0;
 }
 
+/* Styling for the container of the date/time selection and button */
 .generator-container {
   display: flex;
   justify-content: center;
   align-items: center;
 }
 
+/* Styling for the date/time input box */
 .date-time-box {
   background-color: #f4f4f4;
   color: #333;
@@ -134,12 +147,14 @@ h1 {
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
 }
 
+/* Hover effect for the button */
 button:hover {
   background-color: #333;
   color: #f2f2f2;
   font-weight: bold;
 }
 
+/* Styling for the datetime-local input fields */
 input[type="datetime-local"] {
   width: 100%;
   padding: 10px;
@@ -152,17 +167,20 @@ input[type="datetime-local"] {
   outline: none;
 }
 
+/* Focus effect for datetime-local input */
 input[type="datetime-local"]:focus {
   border-color: #333;
   box-shadow: 0 0 5px rgba(4, 170, 109, 0.5);
 }
 
+/* Disabled state for datetime-local input */
 input[type="datetime-local"]:disabled {
   background-color: #e0e0e0;
   color: #999;
   cursor: not-allowed;
 }
 
+/* Spinner styling for the loader */
 .spinner {
   width: 56px;
   height: 56px;
@@ -173,6 +191,7 @@ input[type="datetime-local"]:disabled {
   animation: spinner-a4dj62 1s infinite linear;
 }
 
+/* Spinner animation */
 .spinner::before,
 .spinner::after {
   content: "";
@@ -194,6 +213,7 @@ input[type="datetime-local"]:disabled {
   }
 }
 
+/* Loader container styling */
 .loader-container {
   display: flex;
   justify-content: center;

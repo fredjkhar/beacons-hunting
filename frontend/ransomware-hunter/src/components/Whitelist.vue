@@ -1,20 +1,25 @@
 <template>
     <div class="container">
+        <!-- Title of the page -->
         <h1>Whitelist</h1>
 
         <br>
 
+        <!-- Search bar to add items to be whitelisted -->
         <div class="search-bar">
             <input type="text" v-model="whitelisted_item" placeholder="Add item to be whitelisted" />
         </div>
         
+        <!-- Buttons to add items to destinations or sources -->
         <button @click="addToDestinations(whitelisted_item)" style="margin-left: 1%; margin-right: 1%; margin-bottom: 1%;">Add to Destinations</button>
         <button @click="addToSources(whitelisted_item)">Add to Sources</button>
 
+        <!-- Display of whitelisted destinations and sources -->
         <div class="groups">
             <div class="whitelist-group whitelist-group-1">
                 <h2>Whitelisted Destinations</h2>
                 <ul>
+                    <!-- Loop through the destinations and display them with a remove button -->
                     <li v-for="(d, index) in whitelisted_destinations" :key="index">
                         {{ d }}
                         <button class="remove-btn" @click="removeFromDestinations(index)">X</button>
@@ -24,6 +29,7 @@
             <div class="whitelist-group whitelist-group-2">
                 <h2>Whitelisted Sources</h2>
                 <ul>
+                    <!-- Loop through the sources and display them with a remove button -->
                     <li v-for="(s, index) in whitelisted_sources" :key="index">
                         {{ s }}
                         <button class="remove-btn" @click="removeFromSources(index)">X</button>
@@ -38,13 +44,16 @@
 export default {
     data() {
         return {
+            // Arrays to store whitelisted programs, destinations, and sources
             whitelisted_programs: [],
             whitelisted_destinations: [],
             whitelisted_sources: [],
+            // Variable to bind the input for new items
             whitelisted_item: "",
         };
     },
     mounted() {
+        // Check localStorage and load previously saved whitelisted items
         if (localStorage.getItem("whitelisted_programs") != null) {
             this.whitelisted_programs = JSON.parse(localStorage.getItem("whitelisted_programs"));
         }
@@ -56,41 +65,47 @@ export default {
         }
     },
     methods: {
+        // Add a new program to the whitelisted programs array
         addToPrograms(newItem) {
             if (newItem && newItem.trim() !== "") {
                 this.whitelisted_programs.push(newItem);
                 localStorage.setItem("whitelisted_programs", JSON.stringify(this.whitelisted_programs));
-                this.whitelisted_item = "";
+                this.whitelisted_item = ""; // Reset the input field
             } else {
-                alert("Please enter a valid program name!");
+                alert("Please enter a valid program name!"); // Alert if input is invalid
             }
         },
+        // Add a new item to the whitelisted destinations array
         addToDestinations(newItem) {
             if (newItem && newItem.trim() !== "") {
                 this.whitelisted_destinations.push(newItem);
                 localStorage.setItem("whitelisted_destinations", JSON.stringify(this.whitelisted_destinations));
-                this.whitelisted_item = "";
+                this.whitelisted_item = ""; // Reset the input field
             } else {
-                alert("Please enter a valid destination name!");
+                alert("Please enter a valid destination name!"); // Alert if input is invalid
             }
         },
+        // Add a new item to the whitelisted sources array
         addToSources(newItem) {
             if (newItem && newItem.trim() !== "") {
                 this.whitelisted_sources.push(newItem);
                 localStorage.setItem("whitelisted_sources", JSON.stringify(this.whitelisted_sources));
-                this.whitelisted_item = "";
+                this.whitelisted_item = ""; // Reset the input field
             } else {
-                alert("Please enter a valid sender name!");
+                alert("Please enter a valid sender name!"); // Alert if input is invalid
             }
         },
+        // Remove an item from the whitelisted programs array
         removeFromPrograms(index) {
             this.whitelisted_programs.splice(index, 1);
             localStorage.setItem("whitelisted_programs", JSON.stringify(this.whitelisted_programs));
         },
+        // Remove an item from the whitelisted destinations array
         removeFromDestinations(index) {
             this.whitelisted_destinations.splice(index, 1);
             localStorage.setItem("whitelisted_destinations", JSON.stringify(this.whitelisted_destinations));
         },
+        // Remove an item from the whitelisted sources array
         removeFromSources(index) {
             this.whitelisted_sources.splice(index, 1);
             localStorage.setItem("whitelisted_sources", JSON.stringify(this.whitelisted_sources));
@@ -100,13 +115,14 @@ export default {
 </script>
 
 <style>
-/* Same reset and body styles as before */
+/* Global reset for all elements */
 * {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
 }
 
+/* Body styling */
 body {
     font-family: Arial, sans-serif;
     background-color: #f5f5f5;
@@ -115,7 +131,7 @@ body {
     padding: 20px;
 }
 
-/* search bar style */
+/* Styling for the search bar */
 .search-bar {
     display: flex;
     justify-content: center;
@@ -134,18 +150,18 @@ body {
 }
 
 .search-bar input:focus {
-    border-color: #333;
+    border-color: #333; /* Highlight border when input is focused */
 }
 
-/* Groups container */
+/* Styling for the groups container */
 .groups {
     display: grid;
-    grid-template-columns: repeat(2, 1fr);
+    grid-template-columns: repeat(2, 1fr); /* Two columns */
     gap: 20px;
     height: 55vh;
 }
 
-/* Group styles */
+/* Styling for each whitelist group */
 .whitelist-group {
     background-color: #f2f2f2;
     color: #333;
@@ -155,15 +171,13 @@ body {
     display: flex;
     flex-direction: column;
     justify-content: space-between;
-    /* Ensure items are spaced top to bottom */
 }
 
+/* Styling for the list within the whitelist group */
 ul {
     flex: 1;
-    /* Allow list to expand and take up space */
     margin-bottom: 20px;
     overflow-y: auto;
-    /* Scroll for long lists */
 }
 
 ul li {
@@ -179,6 +193,7 @@ ul li:last-child {
     border-bottom: none;
 }
 
+/* Button styling */
 button {
     padding: 10px 20px;
     color: #fff;
@@ -190,16 +205,16 @@ button {
 }
 
 button:hover {
-    transform: scale(1.05);
+    transform: scale(1.05); /* Slightly increase size on hover */
 }
 
 button:active {
-    transform: scale(1);
+    transform: scale(1); /* Reset size when button is clicked */
 }
 
 /* Remove button styling */
 .remove-btn {
-    margin-left: auto; /* Push the button to the far right */
+    margin-left: auto; /* Push the remove button to the right */
     padding: 2px 6px;
     background-color: #ff4d4d;
     color: #fff;
@@ -211,6 +226,6 @@ button:active {
 }
 
 .remove-btn:hover {
-    background-color: #e60000;
+    background-color: #e60000; /* Change color when hovering over the remove button */
 }
 </style>
