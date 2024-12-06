@@ -5,7 +5,7 @@
         <br>
 
         <div class="search-bar">
-            <input type="text" v-model="whitelisted_item" placeholder="Add a program" />
+            <input type="text" v-model="whitelisted_item" placeholder="Add item to be whitelisted" />
         </div>
         
         <button @click="addToPrograms(whitelisted_item)">Add to Programs</button>

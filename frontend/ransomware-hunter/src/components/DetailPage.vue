@@ -20,9 +20,11 @@
         </div>
 
         <br /> 
-        <button @click="addSourceToWhitelist" style="font-size: medium;">Add source to Whitelist</button>
-        <br /><br />
-        <button @click="addDestinationToWhitelist" style="font-size: medium;">Add destination to Whitelist</button>
+        <button v-if="!sourceWhitelisted" @click="addSourceToWhitelist" style="font-size: medium;">Add source to Whitelist</button>
+        <p v-if="sourceWhitelisted"><strong>Source has been whitelisted</strong></p>
+        <br v-if="!sourceWhitelisted"/><br v-if="!destinationWhitelisted"/>
+        <button v-if="!destinationWhitelisted" @click="addDestinationToWhitelist" style="font-size: medium;">Add destination to Whitelist</button>
+        <p v-if="destinationWhitelisted"><strong>Destination has been whitelisted</strong></p>
       </div>
 
       <div class="graph-section">
@@ -47,6 +49,8 @@ export default {
       whitelisted_programs: [],
       whitelisted_sources: [],
       whitelisted_destinations: [],
+      sourceWhitelisted: false,
+      destinationWhitelisted: false,
     };
   },
   mounted() {
@@ -88,6 +92,7 @@ export default {
           JSON.stringify(this.whitelisted_sources)
         );
       }
+      this.sourceWhitelisted = true;
     },
     addDestinationToWhitelist() {
       if (
@@ -99,6 +104,7 @@ export default {
           JSON.stringify(this.whitelisted_destinations)
         );
       }
+      this.destinationWhitelisted = true;
     },
   },
 };
