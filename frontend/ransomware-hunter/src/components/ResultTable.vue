@@ -15,7 +15,7 @@
         </thead>
         <tbody>
           <tr v-for="row in sortedData" :key="row.id" @click="rowClicked(row)" class="clickable-row">
-            <td v-for="key in headers" :key="key" :data-label="key" v-if="whitelistedRowTest(row)">
+            <td class="cell" v-for="key in headers" :key="key" :data-label="key" v-if="whitelistedRowTest(row)">
               {{ row[key] }}
             </td>
           </tr>
@@ -184,6 +184,18 @@ header h1 {
   border-bottom: 1px solid #ddd;
   white-space: nowrap;
   /* Prevents text wrapping, can remove if wrapping is fine */
+}
+
+.result-table th,
+.result-table td {
+  white-space: normal; /* Allows text to wrap */
+  word-wrap: break-word; /* Breaks long words if necessary */
+}
+
+.result-table {
+  width: 100%; /* Ensures the table spans the full width of the container */
+  border-collapse: collapse; /* Removes gaps between cells */
+  table-layout: fixed; /* Fixed layout for consistent column widths */
 }
 
 .result-table th:hover {
