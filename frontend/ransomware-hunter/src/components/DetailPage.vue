@@ -20,10 +20,10 @@
         </div>
 
         <br />
-        <button v-if="!sourceWhitelisted" @click="addSourceToWhitelist" style="font-size: medium;">Add source to Whitelist</button>
+        <button id="whitelistButtonSource" v-if="!sourceWhitelisted" @click="addSourceToWhitelist" style="font-size: medium;">Add source to Whitelist</button>
         <p v-if="sourceWhitelisted"><strong>Source has been whitelisted</strong></p>
         <br v-if="!sourceWhitelisted"/><br />
-        <button v-if="!destinationWhitelisted" @click="addDestinationToWhitelist" style="font-size: medium;">Add destination to Whitelist</button>
+        <button id="whitelistButtonDestination" v-if="!destinationWhitelisted" @click="addDestinationToWhitelist" style="font-size: medium;">Add destination to Whitelist</button>
         <p v-if="destinationWhitelisted"><strong>Destination has been whitelisted</strong></p>
       </div>
 
@@ -33,7 +33,7 @@
     </div>
   </div>
   <br>
-  <button @click="goBack">Back to Table</button>
+  <button id="backButton" @click="goBack">Back to Table</button>
 </template>
 
 
@@ -54,11 +54,11 @@ export default {
   },
   mounted() {
     // this.programs = this.rowData[8].split(" | ");
-    if (localStorage.getItem("whitelisted_programs") != null) {
-      this.whitelisted_programs = JSON.parse(
-        localStorage.getItem("whitelisted_programs")
-      );
-    }
+    // if (localStorage.getItem("whitelisted_programs") != null) {
+    //   this.whitelisted_programs = JSON.parse(
+    //     localStorage.getItem("whitelisted_programs")
+    //   );
+    // }
     if (localStorage.getItem("whitelisted_destinations") != null) {
       this.whitelisted_destinations = JSON.parse(
         localStorage.getItem("whitelisted_destinations")
