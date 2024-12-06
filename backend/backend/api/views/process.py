@@ -8,7 +8,11 @@ from .score import (
 )
 
 def process_data(df_original):
+
+
     df = df_original.copy()
+
+    print(f"Original length {len(df)}")
     
     # Expand nested JSON fields into separate columns
     df_destination = df['destination'].apply(pd.Series)
@@ -65,6 +69,10 @@ def process_data(df_original):
     
     # Drop any remaining rows with NaN values after scoring
     df.dropna(inplace=True)
+
+    df["ProcessNames"] = df["ProcessNames"].apply(replace_nan_with_empty_string)
+    df["ProcessExecutables"] = df["ProcessExecutables"].apply(replace_nan_with_empty_string)
+    
     
     print(f"Processed {len(df)} records with valid scores.")
     
@@ -72,3 +80,7 @@ def process_data(df_original):
     df["Score"] = df.apply(compute_combined_score, axis=1)
     
     return df
+
+
+def replace_nan_with_empty_string(lst):
+    return [item if pd.notna(item) else "" for item in lst]
