@@ -25,39 +25,50 @@ def process_data(df_original):
         [df.drop(['destination', 'source', 'process'], axis=1), df_destination, df_source, df_process],
         axis=1
     )
-
-    # Define the target columns to retain
+    
+    # Define the target columns to retain, including 'process.name' and 'process.executable'
     target_columns = ["destination.ip", "source.ip", "@timestamp", "process.name", "process.executable"]
-    df = df[target_columns]
-
-    # Drop rows with missing (NaN) values
-    #df = df.dropna()
-
-    # Group by source and destination IPs and aggregate connection data
+    
+    # Ensure all target columns exist in the DataFrame to prevent KeyError
+    existing_target_columns = [col for col in target_columns if col in df.columns]
+    df = df[existing_target_columns]
+    
+    # Optional: Print columns after selecting target columns for debugging
+    print("Selected Columns:", df.columns.tolist())
+    
+    # Group by 'source.ip' and 'destination.ip' and aggregate necessary data
+    # Additionally, aggregate 'process.name' and 'process.executable' into lists of unique values
+    group_by_columns = ["source.ip", "destination.ip"]
     df = (
-        df.groupby(["source.ip", "destination.ip"])
+        df.groupby(group_by_columns)
         .agg(
             TotalConnections=pd.NamedAgg(column="@timestamp", aggfunc="count"),
             ConnectionTimes=pd.NamedAgg(column="@timestamp", aggfunc=list),
+            ProcessNames=pd.NamedAgg(column="process.name", aggfunc=lambda x: list(set(x))),
+            ProcessExecutables=pd.NamedAgg(column="process.executable", aggfunc=lambda x: list(set(x))),
         )
         .reset_index()
     )
-
-    # **Corrected Lambda Function: Parse Strings to datetime Objects**
+    
+    # Optional: Print DataFrame after grouping for debugging
+    print("DataFrame after Grouping:\n", df.head())
+    
+    # Parse timestamp strings to datetime objects and sort
     df["ConnectionTimes"] = df["ConnectionTimes"].apply(
         lambda x: sorted([parse(t) for t in x])
     )
-
+    
     # Compute various scores based on ConnectionTimes
     df["Skew score"] = df["ConnectionTimes"].apply(compute_bowleys_skewness)
     df["MAD score"] = df["ConnectionTimes"].apply(compute_mad_score)
     df["Count score"] = df["ConnectionTimes"].apply(compute_connection_count_score)
-
+    
     # Drop any remaining rows with NaN values after scoring
     df.dropna(inplace=True)
-
-    print(len(df))
+    
+    print(f"Processed {len(df)} records with valid scores.")
+    
     # Compute the combined score
     df["Score"] = df.apply(compute_combined_score, axis=1)
-
+    
     return df

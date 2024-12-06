@@ -23,6 +23,7 @@ def fetch_data_from_elasticsearch(start_time, end_time):
         # Extract data from the result
         hits = result['hits']['hits']
         df = pd.DataFrame([hit['_source'] for hit in hits])
+        print("retreived " + len(df) + " from elastic")
 
         # Create a DataFrame
         return df
@@ -53,7 +54,7 @@ def fetch_data_from_elasticsearch_last_24h():
         # Extract data from the result
         hits = result['hits']['hits']
         df = pd.DataFrame([hit['_source'] for hit in hits])
-
+        print("retreived " + len(df) + " from elastic")
         # Create a DataFrame
         return df
     except Exception as e:

@@ -1,26 +1,8 @@
 ,source.ip,destination.ip,TotalConnections,Score,Skew score,MAD score,Count score,process.name,process.executable
-8,192.168.2.26,208.67.222.222,170,0.9889,1.0,0.9666666666666667,1.0,python3.13.exe,C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.13_3.13.496.0_x64__qbz5n2kfra8p0\python3.13.exe
-10,192.168.2.26,34.67.212.1,131,0.8778,0.6666666666666667,0.9666666666666667,1.0,winlogbeat.exe,C:\Users\Adel\Desktop\winlogbeat\winlogbeat.exe
-2,10.200.72.101,13.107.3.128,7,0.788,0.6341463414634146,0.8833333333333333,0.8464611253346233,msedgewebview2.exe,C:\Program Files (x86)\Microsoft\EdgeWebView\Application\130.0.2849.80\msedgewebview2.exe
-7,172.20.10.6,34.67.212.1,142,0.6667,0.0,1.0,1.0,winlogbeat.exe,C:\Users\Adel\Desktop\winlogbeat\winlogbeat.exe
-15,2001:4958:2808:c301:eb:d707:229c:c053,2607:f8b0:400b:803:0:0:0:200a,11,0.6525,0.47058823529411764,0.9666666666666667,0.5201314514031729,chrome.exe,C:\Program Files\Google\Chrome\Application\chrome.exe
-1,10.200.72.101,10.8.0.10,241,0.5524,0.8571428571428572,0.8,0.0,svchost.exe | chrome.exe | msedgewebview2.exe,C:\Windows\System32\svchost.exe | C:\Program Files (x86)\Microsoft\EdgeWebView\Application\130.0.2849.80\msedgewebview2.exe | C:\Program Files\Google\Chrome\Application\chrome.exe
-19,2605:8d80:5a1:ac2d:68d5:105a:1f9e:d459,2607:f8b0:4020:800:0:0:0:200e,10,0.5488,0.8448844884488449,0.0,0.8015712978584414,chrome.exe,C:\Program Files\Google\Chrome\Application\chrome.exe
-6,172.20.10.6,172.20.10.1,357,0.4254,0.7096774193548387,0.5666666666666667,0.0,chrome.exe | svchost.exe | msedgewebview2.exe,C:\Windows\System32\svchost.exe | C:\Program Files (x86)\Microsoft\EdgeWebView\Application\130.0.2849.80\msedgewebview2.exe | C:\Program Files\Google\Chrome\Application\chrome.exe
-13,2001:4958:2808:c301:eb:d707:229c:c053,2001:4958:732:0:0:0:0:1,460,0.4062,0.5185185185185186,0.7,0.0,svchost.exe | chrome.exe | Code.exe | msedgewebview2.exe,C:\Windows\System32\svchost.exe | C:\Users\Adel\AppData\Local\Programs\Microsoft VS Code\Code.exe | C:\Program Files (x86)\Microsoft\EdgeWebView\Application\130.0.2849.80\msedgewebview2.exe | C:\Program Files\Google\Chrome\Application\chrome.exe
-14,2001:4958:2808:c301:eb:d707:229c:c053,2001:4958:733:0:0:0:0:1,539,0.3935,0.4137931034482759,0.7666666666666666,0.0,chrome.exe | svchost.exe,C:\Windows\System32\svchost.exe | C:\Program Files\Google\Chrome\Application\chrome.exe
-4,10.200.72.101,52.113.194.132,10,0.3874,0.12195121951219512,0.6666666666666667,0.37359106721782337,msedgewebview2.exe,C:\Program Files (x86)\Microsoft\EdgeWebView\Application\130.0.2849.80\msedgewebview2.exe
-17,2001:4958:2808:c301:eb:d707:229c:c053,2607:f8b0:400b:80c:0:0:0:200e,9,0.3189,0.43200000000000005,0.1333333333333333,0.3914520438072434,chrome.exe,C:\Program Files\Google\Chrome\Application\chrome.exe
-20,2605:8d80:5a1:ac2d:68d5:105a:1f9e:d459,2607:f8b0:4020:802:0:0:0:2004,7,0.3115,0.007352941176470562,0.3666666666666667,0.5604611794848332,chrome.exe,C:\Program Files\Google\Chrome\Application\chrome.exe
-3,10.200.72.101,142.251.32.67,9,0.2983,0.16842105263157892,0.30000000000000004,0.426499358788344,chrome.exe,C:\Program Files\Google\Chrome\Application\chrome.exe
-18,224.0.0.251,192.168.56.1,16,0.2728,0.8183894917190178,0.0,0.0,chrome.exe | svchost.exe,C:\Windows\System32\svchost.exe | C:\Program Files\Google\Chrome\Application\chrome.exe
-23,fe80:0:0:0:a48d:329c:6b2:fa0f,ff02:0:0:0:0:0:0:fb,7,0.2633,0.5741029641185648,0.0,0.21570386788689336,svchost.exe | chrome.exe,C:\Windows\System32\svchost.exe | C:\Program Files\Google\Chrome\Application\chrome.exe
-22,fe80:0:0:0:31da:d31a:73b7:5636,ff02:0:0:0:0:0:1:3,39,0.2422,0.042740414833438045,0.6833333333333333,0.0006458534700233073,svchost.exe,C:\Windows\System32\svchost.exe
-12,192.168.56.1,224.0.0.252,39,0.2422,0.042740414833438045,0.6833333333333333,0.0006458534700233073,svchost.exe,C:\Windows\System32\svchost.exe
-21,fe80:0:0:0:31da:d31a:73b7:5636,ff02:0:0:0:0:0:0:fb,8,0.1915,0.3318544809228039,0.0,0.24257871235671125,svchost.exe | chrome.exe,C:\Windows\System32\svchost.exe | C:\Program Files\Google\Chrome\Application\chrome.exe
-16,2001:4958:2808:c301:eb:d707:229c:c053,2607:f8b0:400b:807:0:0:0:200e,16,0.177,0.47731092436974787,0.0,0.053680016775005245,chrome.exe,C:\Program Files\Google\Chrome\Application\chrome.exe
-9,192.168.2.26,224.0.0.252,14,0.173,0.48689138576779023,0.0,0.0321599544247503,svchost.exe,C:\Windows\System32\svchost.exe
-11,192.168.56.1,224.0.0.251,9,0.1471,0.18665768194070076,0.0,0.2546108827652529,chrome.exe | svchost.exe,C:\Windows\System32\svchost.exe | C:\Program Files\Google\Chrome\Application\chrome.exe
-0,0:0:0:0:0:0:0:1,0:0:0:0:0:0:0:1,11,0.1309,0.024769992922859196,0.3666666666666667,0.0012875467442173348,svchost.exe,C:\Windows\System32\svchost.exe
-24,fe80:0:0:0:a48d:329c:6b2:fa0f,ff02:0:0:0:0:0:1:3,21,0.0673,0.19999999999999996,0.0,0.0020485036233802026,svchost.exe,C:\Windows\System32\svchost.exe
-5,127.0.0.1,239.255.255.250,9,0.0642,0.16362407031778226,0.0,0.029042968478296925,svchost.exe,C:\Windows\System32\svchost.exe
+2,192.168.2.26,208.67.220.220,150,0.9889,1.0,0.9666666666666667,1.0,python3.13.exe,C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.13_3.13.496.0_x64__qbz5n2kfra8p0\python3.13.exe
+3,192.168.2.26,34.67.212.1,133,0.661,0.0,1.0,0.9830661315239003,winlogbeat.exe,C:\Users\Adel\Desktop\winlogbeat\winlogbeat.exe
+1,192.168.2.26,207.164.234.129,9,0.4878,0.8157894736842105,0.0,0.647718288158615,svchost.exe,C:\Windows\System32\svchost.exe
+4,2001:4958:2808:c301:dd4e:c398:1404:b69c,2001:4958:732:0:0:0:0:1,234,0.3667,0.4,0.7,0.0,chrome.exe | svchost.exe | Code.exe | msedgewebview2.exe,C:\Windows\System32\svchost.exe | C:\Users\Adel\AppData\Local\Programs\Microsoft VS Code\Code.exe | C:\Program Files (x86)\Microsoft\EdgeWebView\Application\130.0.2849.80\msedgewebview2.exe | C:\Program Files\Google\Chrome\Application\chrome.exe
+0,192.168.2.26,192.168.2.1,11,0.3316,0.8496993987975952,0.0,0.1449545673866415,svchost.exe,C:\Windows\System32\svchost.exe
+5,2001:4958:2808:c301:dd4e:c398:1404:b69c,2001:4958:733:0:0:0:0:1,10,0.3077,0.6899383983572895,0.0,0.2331401648807792,svchost.exe | chrome.exe,C:\Windows\System32\svchost.exe | C:\Program Files\Google\Chrome\Application\chrome.exe
+6,2001:4958:2808:c301:dd4e:c398:1404:b69c,2607:f8b0:400b:803:0:0:0:200e,7,0.3034,0.2935153583617748,0.01666666666666672,0.6001556265624741,chrome.exe,C:\Program Files\Google\Chrome\Application\chrome.exe

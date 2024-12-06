@@ -37,5 +37,5 @@ def my_view(request):
     if df.empty:
         return JsonResponse({'error': 'No relevant data after processing.'}, status=404)
 
-    result = df[df["Score"] >= 0.4].to_dict(orient='records')
+    result = df[df["Score"] >= 0.3].to_dict(orient='records')
     return JsonResponse(result, safe=False)
