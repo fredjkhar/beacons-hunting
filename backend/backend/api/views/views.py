@@ -28,9 +28,6 @@ def my_view(request):
             return JsonResponse({'error': 'Invalid datetime format.'}, status=400)
 
         df_original = fetch_data_from_elasticsearch(start_time, end_time)
-        
-    print(df_original)
-    print(len(df_original))
 
     if df_original.empty:
         return JsonResponse({'error': 'No data fetched from Elasticsearch.'}, status=500)
@@ -40,5 +37,5 @@ def my_view(request):
     if df.empty:
         return JsonResponse({'error': 'No relevant data after processing.'}, status=404)
 
-    result = df.head(10).to_dict(orient='records')
+    result = df[df["Score"] >= 0.4]
     return JsonResponse(result, safe=False)

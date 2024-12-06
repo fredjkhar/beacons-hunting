@@ -6,14 +6,12 @@
           <h1>Ransomware Hunter</h1>
         </div>
       </nav>
-  
       <div class="login-layout">
+        <strong class="message-layout">Generate beacons hunting reports for your organization. </strong>
+          <strong class="message-layout"> Please request access by sending an email to fkhar048@uottawa.ca</strong>
         <h3>Log in to start generating reports</h3>
-        <label for="username">Username</label>
-        <input id="username" type="text" v-model="username" placeholder="Enter your username" />
-  
-        <label for="password">Password</label>
-        <input id="password" type="password" v-model="password" placeholder="Enter your password" />
+        <input id="username" type="text" v-model="username" placeholder="Username" />
+        <input id="password" type="password" v-model="password" placeholder="Password" />
   
         <button @click="login">Log In</button>
   
@@ -46,6 +44,16 @@
   </script>
   
   <style scoped>
+  h3 {
+    color: #38678F;
+  }
+  .message-layout {
+    font-size: 20px;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+  }
   .login-layout {
     display: flex;
     flex-direction: column;

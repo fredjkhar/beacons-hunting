@@ -17,7 +17,7 @@ def compute_bowleys_skewness(connection_times):
         return 0
 
     bowleys_skewness = bowleys_numerator / bowleys_denominator
-    return 1.0 - abs(bowleys_skewness)
+    return round(1.0 - abs(bowleys_skewness), 4)
 
 def compute_mad_score(connection_times):
     connection_times = np.array(connection_times)
@@ -26,16 +26,16 @@ def compute_mad_score(connection_times):
     diffs = diffs[diffs > 1]
 
     if len(diffs) < 6:
-        return 0.0
+        return 0
 
     tsMid = np.percentile(diffs, 50)
     tsMadm = np.median(np.abs(diffs - tsMid))
     tsMadmScore = 1.0 - float(tsMadm) / 30.0
-    return max(tsMadmScore, 0)
+    return round(max(tsMadmScore, 0),4)
 
 def compute_connection_count_score(connection_times):
     if len(connection_times) < 6:
-        return 0.0
+        return 0
 
     connection_times.sort()
     time_span_seconds = (connection_times[-1] - connection_times[0]).total_seconds()
@@ -47,7 +47,7 @@ def compute_connection_count_score(connection_times):
 
     tsTimespanDiv = float(time_span_seconds) / tsMid
     tsConnCountScore = float(len(connection_times)) / tsTimespanDiv
-    return min(tsConnCountScore, 1.0)
+    return round(min(tsConnCountScore, 1.0),4)
 
 def compute_combined_score(row):
     return round(((row["Skew score"] + row["MAD score"] + row["Count score"]) / 3), 4)
