@@ -8,21 +8,11 @@
             <input type="text" v-model="whitelisted_item" placeholder="Add item to be whitelisted" />
         </div>
         
-        <button @click="addToPrograms(whitelisted_item)">Add to Programs</button>
         <button @click="addToDestinations(whitelisted_item)" style="margin-left: 1%; margin-right: 1%; margin-bottom: 1%;">Add to Destinations</button>
-        <button @click="addToSources(whitelisted_item)">Add to Senders</button>
+        <button @click="addToSources(whitelisted_item)">Add to Sources</button>
 
         <div class="groups">
             <div class="whitelist-group whitelist-group-1">
-                <h2>Whitelisted Programs</h2>
-                <ul>
-                    <li v-for="(p, index) in whitelisted_programs" :key="index">
-                        {{ p }}
-                        <button class="remove-btn" @click="removeFromPrograms(index)">X</button>
-                    </li>
-                </ul>
-            </div>
-            <div class="whitelist-group whitelist-group-2">
                 <h2>Whitelisted Destinations</h2>
                 <ul>
                     <li v-for="(d, index) in whitelisted_destinations" :key="index">
@@ -31,8 +21,8 @@
                     </li>
                 </ul>
             </div>
-            <div class="whitelist-group whitelist-group-3">
-                <h2>Whitelisted Senders</h2>
+            <div class="whitelist-group whitelist-group-2">
+                <h2>Whitelisted Sources</h2>
                 <ul>
                     <li v-for="(s, index) in whitelisted_sources" :key="index">
                         {{ s }}
@@ -150,7 +140,7 @@ body {
 /* Groups container */
 .groups {
     display: grid;
-    grid-template-columns: repeat(3, 1fr);
+    grid-template-columns: repeat(2, 1fr);
     gap: 20px;
     height: 55vh;
 }

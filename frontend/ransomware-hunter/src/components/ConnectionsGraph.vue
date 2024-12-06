@@ -2,7 +2,7 @@
   <div class="graphContent">
     <h2 id="graphTitle">Beacon Connection Frequency</h2>
     <div class="mb-1">
-      <select ref="selectedTimeUnit" @change="updateGraph">
+      <select id="selectedTU" ref="selectedTimeUnit" @change="updateGraph">
         <option disabled selected>Select a view</option>
         <option value="a">All</option>
         <option value="h">Hours</option>
@@ -10,7 +10,7 @@
       </select>
     </div>
     <h3>{{ selectedDate }}</h3>
-    <div ref="plotContainer" style="width: 100%; height: 400px;"></div>
+    <div id="plotContainer" ref="plotContainer" style="width: 100%; height: 400px;"></div>
     <h3 v-if="selectedTimeUnit == 'd'">Click on a bar to view hourly frequency of the selected day</h3>
   </div>
 </template>
@@ -30,6 +30,10 @@ export default {
     this.prepareData();
   },
   methods: {
+    onBarClick(barData) {
+    // Handle the bar click event
+    this.selectedDate = barData.date;
+  },
     prepareData() {
       const dummyData = {
         ConnectionTimes: [
