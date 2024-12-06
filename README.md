@@ -2,7 +2,9 @@
 
 ## Project Overview
 High-Level Diagram:
-![image](https://github.com/fredjkhar/SEG491X-T64-Capstone/assets/45071113/5463aad9-c2b7-43b2-bc32-f8fbca263b73)
+
+<img width="806" alt="Screenshot 2024-12-06 at 3 56 17 PM" src="https://github.com/user-attachments/assets/289b28db-5aa9-4ee8-8395-ac417c8afe47">
+
 
 Details on [the week 6 wiki page](https://github.com/fredjkhar/SEG491X-T64-Capstone/wiki/Week-6-%E2%80%90-ELK-Stack-and-beyond)
 
