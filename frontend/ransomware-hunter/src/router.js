@@ -6,6 +6,7 @@ import DetailPage from "./components/DetailPage.vue";
 import Whitelist from "./components/Whitelist.vue";
 import GenerateReport from "./components/GenerateReport.vue";
 import HomePage from "./components/HomePage.vue";
+import ConnectionsGraph from "./components/ConnectionsGraph.vue";
 
 const routes = [
   {
@@ -34,6 +35,11 @@ const routes = [
     name: "ViewReport",
     component: ResultTable,
   },
+  {
+    path: "/graph",
+    name: "Graph",
+    component: ConnectionsGraph,
+  }
 ];
 
 const router = createRouter({
