@@ -1,4 +1,4 @@
-# Becons Hunter
+# Beacons Hunter
 #### SEG491X-T64-Capstone
 
 ## Project Overview
@@ -8,10 +8,9 @@ Beacon Hunter is a system designed to detect potential beaconing activities in n
 In a typical attack scenario, a host machine (victim) is compromised through phishing or social engineering, resulting in the installation of a malicious file. This file sends periodic “beacon” signals to a C2 server, letting attackers know the system is compromised and awaiting further instructions. By detecting these regular intervals and patterns, defenders can identify potential threats early and respond accordingly.
 
 
-
 ## System Architecture
 
-<img width="806" alt="Screenshot 2024-12-06 at 3 56 17 PM" src="https://github.com/user-attachments/assets/289b28db-5aa9-4ee8-8395-ac417c8afe47">
+<img width="746" alt="Screenshot 2024-12-06 at 8 46 05 PM" src="https://github.com/user-attachments/assets/cb4ffd65-41dc-4532-a4fc-26387b570b9c">
 
 #### 1.	Vue.js (Frontend):
 Presents an interactive interface for viewing IP pair scores, connection counts, and associated processes. Users can click on any IP pair to view a detailed time-series graph.
@@ -31,8 +30,12 @@ Deployed on target machines to collect and forward Windows event logs to Elastic
 - __Statistical Analysis of Traffic:__ Uses Median Absolute Deviation (MAD) and Skew scores to quantify the regularity of communications between source and destination IP pairs.
 - __Scoring System:__ Generates a final score (between 0 and 1) that indicates the likelihood of beaconing. Higher scores suggest more consistent, periodic traffic.
 - __Intuitive Reporting:__ Displays aggregated data in a user-friendly table. Users can drill down into specific IP pairs to view time-series charts illustrating connection patterns.
+- __Whitelisting Capability__ Allows users to whitelist known safe processes and IP addresses, reducing false positives and focusing on truly suspicious activity.
 
-# Image
+<img width="1661" alt="Screenshot 2024-12-06 at 8 47 16 PM" src="https://github.com/user-attachments/assets/bdbf7705-be41-4aa0-b7a5-bd5f2577f782">
+
+![Uploading Screenshot 2024-12-06 at 8.49.12 PM.png…]()
+
 
 ## Access Points:
 
