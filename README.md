@@ -34,7 +34,7 @@ Deployed on target machines to collect and forward Windows event logs to Elastic
 
 <img width="1661" alt="Screenshot 2024-12-06 at 8 47 16 PM" src="https://github.com/user-attachments/assets/bdbf7705-be41-4aa0-b7a5-bd5f2577f782">
 
-![Uploading Screenshot 2024-12-06 at 8.49.12 PM.png…]()
+<img width="1455" alt="Screenshot 2024-12-06 at 8 50 52 PM" src="https://github.com/user-attachments/assets/6773c058-0920-49d7-820d-5620b8eeaa10">
 
 
 ## Access Points:
