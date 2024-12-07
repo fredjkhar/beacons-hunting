@@ -1,49 +1,52 @@
-# SEG491X-T64-Capstone
+# Becons Hunter
+#### SEG491X-T64-Capstone
 
 ## Project Overview
-High-Level Diagram:
+
+Beacon Hunter is a system designed to detect potential beaconing activities in network traffic. Beaconing is a common behavior observed in compromised machines that periodically communicate with a Command & Control (C2) server. By applying statistical methods (MAD and Skew scores) to IP traffic patterns, Beacon Hunter helps identify suspicious communications that may indicate malicious activity.
+
+In a typical attack scenario, a host machine (victim) is compromised through phishing or social engineering, resulting in the installation of a malicious file. This file sends periodic “beacon” signals to a C2 server, letting attackers know the system is compromised and awaiting further instructions. By detecting these regular intervals and patterns, defenders can identify potential threats early and respond accordingly.
+
+
+
+## System Architecture
 
 <img width="806" alt="Screenshot 2024-12-06 at 3 56 17 PM" src="https://github.com/user-attachments/assets/289b28db-5aa9-4ee8-8395-ac417c8afe47">
 
+#### 1.	Vue.js (Frontend):
+Presents an interactive interface for viewing IP pair scores, connection counts, and associated processes. Users can click on any IP pair to view a detailed time-series graph.
+#### 2.	Django (Backend):
+Performs the core calculations (MAD, Skew, and final scores) and serves processed data to the frontend.
+#### 3.	Nginx (HTTP Proxy):
+Acts as a reverse proxy, routing requests from the internet to the appropriate containerized service.
+#### 4.	ElasticSearch (Data Store):
+Stores Windows logs, which are ingested from host machines. These logs form the raw data upon which beacon detection calculations are performed.
+#### 5.	Kibana (Data Visualization):
+Provides a powerful interface for exploring logs, indices, and other metadata stored in ElasticSearch.
+#### 6.	Winlogbeat & Sysmon (Host Agents):
+Deployed on target machines to collect and forward Windows event logs to ElasticSearch. These logs serve as input for the beacon detection engine.
 
-Details on [the week 6 wiki page](https://github.com/fredjkhar/SEG491X-T64-Capstone/wiki/Week-6-%E2%80%90-ELK-Stack-and-beyond)
+## Key Features:
 
-## Installation/Setup
-### Step 1: Install and configure Sysmon
-1. Download Sysmon from https://learn.microsoft.com/en-us/sysinternals/downloads/sysmon
-2. Navigate to where Sysmon is installed and run **with administrative priviledges** `./sysmon64.exe -accepteula -i`
-3. Copy the Sysmon configuration file from the repository (`sysmon-config.xml`) to where Sysmon is installed
-4. Run `./sysmon64.exe -c sysmonconfig.xml` **with administrative priviledges**
-5. Sysmon is now installed and configured
+- __Statistical Analysis of Traffic:__ Uses Median Absolute Deviation (MAD) and Skew scores to quantify the regularity of communications between source and destination IP pairs.
+- __Scoring System:__ Generates a final score (between 0 and 1) that indicates the likelihood of beaconing. Higher scores suggest more consistent, periodic traffic.
+- __Intuitive Reporting:__ Displays aggregated data in a user-friendly table. Users can drill down into specific IP pairs to view time-series charts illustrating connection patterns.
 
-### Step 2: Run Elastic and Kibana Docker mages
-1. Navigate to `elk` directory
-2. Run `docker-compose up -d elasticsearch` **with administrative priviledges**. This might take a while so please ensure elastic is fully operational before moving to the next step
-3. To test if elastic, run `Test-NetConnection -ComputerName localhost -Port 9200`
-    ![alt text](./images/conn-test-port-9200.png)
-4. Now run `docker-compose up -d kibana` **with administrative priviledges**
-5. To test kibana, run `Test-NetConnection -ComputerName localhost -Port 5601`
-![alt text](./images/conn-test-port-5601.png)
-6. you can now open your browser and navigate to `localhost:5601` to access kibana. You will be prompted to type a username and password.
+# Image
 
-### Step 3: Install and run Winlogbeat
-1. Download Winlogbeat from https://www.elastic.co/downloads/beats/winlogbeat and unzip it. 
-2. Copy the config file (`winlogbeat.yml`) to where `winlogbeat.exe` is located
-3. Run `PowerShell.exe -ExecutionPolicy UnRestricted -File .\install-service-winlogbeat.ps1` **with administrative priviledges**
-4. Run `.\winlogbeat.exe setup -e` **with administrative priviledges**
-5. Run `Start-Service winlogbeat` **with administrative priviledges**
-6. You should start seeing sysmon events being ingested by elastic
-![alt text](./images/kibana-dashboard.png)
+## Access Points:
 
-### Step 4 : Install and run VirtualBox
-1. Install VirtualBox 
-    https://www.virtualbox.org/wiki/Downloads
-    VirtualBox 7.0.14 : Windows host
-2. Install Microsoft Visual C++ Redistributable to run VB
-   https://learn.microsoft.com/en-us/cpp/windows/latest-supported-vc-redist?view=msvc-170
-   
-    
+- __Frontend (Vue.js):__ Accessible via http://34.67.212.1/.
+- __Kibana Interface:__ For more detailed data exploration, accessible via http://34.67.212.1:5601/. Navigate to discover
 
+## Continuous Integration & Deployment:
+
+__GitHub Actions:__ Builds and tests the project on each Pull Request. When changes are merged, new images are pushed to Docker Hub.
+__Act (Local CI Testing):__ Enables local testing of GitHub Actions workflows before pushing ####changes.
+__Google Cloud Engine VM:__ Pulls updated images from Docker Hub and restarts containers, ensuring the running environment remains up-to-date.
+
+
+**This system was developed by a team of University of Ottawa students as a proof-of-concept tool for enhanced beacon detection in network traffic..**
 
 
 
